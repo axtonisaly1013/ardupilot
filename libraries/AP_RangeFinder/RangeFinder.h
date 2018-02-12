@@ -119,6 +119,10 @@ public:
     // 10Hz from main loop
     void update(void);
 
+    float get_hull_offset(void) { return dist2hll; }
+
+    bool flip_measurement(void);
+
     // Handle an incoming DISTANCE_SENSOR message (from a MAVLink enabled range finder)
     void handle_msg(mavlink_message_t *msg);
 
@@ -164,6 +168,8 @@ private:
     AP_RangeFinder_Backend *drivers[RANGEFINDER_MAX_INSTANCES];
     uint8_t num_instances:3;
     float estimated_terrain_height;
+    float dist2hll;
+    float flpread;
     AP_SerialManager &serial_manager;
     Vector3f pos_offset_zero;   // allows returning position offsets of zero for invalid requests
 

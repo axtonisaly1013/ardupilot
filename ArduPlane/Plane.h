@@ -319,6 +319,10 @@ private:
         uint16_t ch2_temp;
     } elevon { 1500, 1500, 1500, 1500 };
 
+    //Global Variable for Hydrofoil Project/////////
+    float dist_above_water = 0.0; //This is in cm!
+    //End of Global Variables///////////////////////
+
     // Failsafe
     struct {
         // Used to track if the value on channel 3 (throtttle) has fallen below the failsafe threshold

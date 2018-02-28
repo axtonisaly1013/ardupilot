@@ -58,6 +58,11 @@ void Plane::adjust_altitude_target()
     altitude_error_cm = calc_altitude_error_cm();
 }
 
+void Plane::set_target_altitude_preset(void)
+{
+	target_altitude.amsl_cm = SpdHgt_Controller->get_fixed_height();
+}
+
 /*
   setup for a gradual glide slope to the next waypoint, if appropriate
  */

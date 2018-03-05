@@ -74,13 +74,13 @@ void Plane::read_rangefinder(void)
                 //Where Low Pass filter Lives. Alpha is the the RNGFND_EXPO parameter.
                 DAW += rangefinder.get_expo(i)*(-1.0*wtrdistcm+rangefinder.get_offb(i)*ahrs.cos_pitch()*ahrs.sin_roll()+rangefinder.get_offc(i)*ahrs.cos_pitch()*ahrs.cos_roll()-rangefinder.get_offa(i)*ahrs.sin_pitch())+(1.0-rangefinder.get_expo(i))*dist_above_water;
                 if(rngdt > 0.0) {
-                    VAW += rangefinder.get_expo_vel(i)*((dist_above_water-prev_dist)/rngdt)+(1.0-rangefinder.get_expo_vel(i))*vel_above_water;
+                    VAW += rangefinder.get_expo_vel(i)*((DAW-prev_dist)/rngdt)+(1.0-rangefinder.get_expo_vel(i))*vel_above_water;
                 }
             }
             else{
                 DAW +=  rangefinder.get_expo(i)*((rangefinder.get_offb(i)*ahrs.sin_roll()+(rangefinder.get_offc(i)+wtrdistcm)*ahrs.cos_roll())*ahrs.cos_pitch()-rangefinder.get_offa(i)*ahrs.sin_pitch())+(1.0-rangefinder.get_expo(i))*dist_above_water;
                 if(rngdt > 0.0) {
-                    VAW += rangefinder.get_expo_vel(i)*((dist_above_water-prev_dist)/rngdt)+(1.0-rangefinder.get_expo_vel(i))*vel_above_water;
+                    VAW += rangefinder.get_expo_vel(i)*((DAW-prev_dist)/rngdt)+(1.0-rangefinder.get_expo_vel(i))*vel_above_water;
                 }
             }
     }    

@@ -58,9 +58,9 @@ void Plane::read_rangefinder(void)
 		rngdt = current_time_rng-prev_rng_time;
 	}
 	prev_rng_time = current_time_rng;
-	float prev_dist = dist_above_water;
-	float DAW[rangefinder.num_sensors()];
-	float VAW[rangefinder.num_sensors()];
+	AP_Float prev_dist = dist_above_water;
+	AP_Float DAW[rangefinder.num_sensors()];
+	AP_Float VAW[rangefinder.num_sensors()];
 	float d_sum = 0;
 	float v_sum = 0;
 	uint8_t compensation_mode = rangefinder.get_att_Comp();

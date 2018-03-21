@@ -59,8 +59,10 @@ void Plane::read_rangefinder(void)
 	}
 	prev_rng_time = current_time_rng;
 	float prev_dist = dist_above_water;
-	float DAW = 0;
-	float VAW = 0;
+	float DAW[rangefinder.num_sensors()];
+	float VAW[rangefinder.num_sensors()];
+	float d_sum = 0;
+	float v_sum = 0;
 	
 	for(uint8_t i = 0; i < rangefinder.num_sensors(); i++) {
         float wtrdistcm = rangefinder.distance_cm(i);
@@ -71,25 +73,27 @@ void Plane::read_rangefinder(void)
             }
         */
             if(rangefinder.flip_measurement(i)) {
-                //Where Low Pass filter Lives. Alpha is the the RNGFND_EXPO parameter.
-                DAW += rangefinder.get_expo(i)*(-1.0*wtrdistcm+rangefinder.get_offb(i)*ahrs.cos_pitch()*ahrs.sin_roll()+rangefinder.get_offc(i)*ahrs.cos_pitch()*ahrs.cos_roll()-rangefinder.get_offa(i)*ahrs.sin_pitch())+(1.0-rangefinder.get_expo(i))*dist_above_water;
-                if(rngdt > 0.0) {
-                    VAW += rangefinder.get_expo_vel(i)*((DAW-prev_dist)/rngdt)+(1.0-rangefinder.get_expo_vel(i))*vel_above_water;
-                }
+                //Where Low Pass filter Lives. Alpha is the RNGFND_EXPO parameter.
+                DAW[i] = rangefinder.get_expo(i)*(-1.0*wtrdistcm+rangefinder.get_offb(i)*ahrs.cos_pitch()*ahrs.sin_roll()+rangefinder.get_offc(i)*ahrs.cos_pitch()*ahrs.cos_roll()-rangefinder.get_offa(i)*ahrs.sin_pitch())+(1.0-rangefinder.get_expo(i))*prev_dist;
             }
             else{
-                DAW +=  rangefinder.get_expo(i)*((rangefinder.get_offb(i)*ahrs.sin_roll()+(rangefinder.get_offc(i)+wtrdistcm)*ahrs.cos_roll())*ahrs.cos_pitch()-rangefinder.get_offa(i)*ahrs.sin_pitch())+(1.0-rangefinder.get_expo(i))*dist_above_water;
-                if(rngdt > 0.0) {
-                    VAW += rangefinder.get_expo_vel(i)*((DAW-prev_dist)/rngdt)+(1.0-rangefinder.get_expo_vel(i))*vel_above_water;
-                }
+                DAW[i] =  rangefinder.get_expo(i)*((rangefinder.get_offb(i)*ahrs.sin_roll()+(rangefinder.get_offc(i)+wtrdistcm)*ahrs.cos_roll())*ahrs.cos_pitch()-rangefinder.get_offa(i)*ahrs.sin_pitch())+(1.0-rangefinder.get_expo(i))*prev_dist;
             }
-    }    
-        dist_above_water = DAW/rangefinder.num_sensors();
-        vel_above_water = VAW/rangefinder.num_sensors();
+            // update velocity estimate
+            if(rngdt > 0.0) {
+                VAW[i] = rangefinder.get_expo_vel(i)*((DAW[i]-prev_dist)/rngdt)+(1.0-rangefinder.get_expo_vel(i))*vel_above_water;
+            }
+            // sum estimates for each sensor to be averaged
+            d_sum += DAW[i];
+            v_sum += VAW[i];
+    } 
         
-        ahrs.set_h_water(dist_above_water);
-        ahrs.set_h_dot_water(vel_above_water);
-        // ## TO-DO : Implement Kalman Filter for vel estimate using rangefinder
+    dist_above_water = d_sum/rangefinder.num_sensors();
+    vel_above_water = v_sum/rangefinder.num_sensors();
+        
+    ahrs.set_h_water(dist_above_water);
+    ahrs.set_h_dot_water(vel_above_water);
+    // ## TO-DO : Implement Kalman Filter for vel estimate using rangefinder
         
 }
 /*

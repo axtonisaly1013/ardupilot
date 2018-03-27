@@ -106,6 +106,7 @@ public:
     AP_Float _offa[RANGEFINDER_MAX_INSTANCES];
     AP_Float _offb[RANGEFINDER_MAX_INSTANCES];
     AP_Float _offc[RANGEFINDER_MAX_INSTANCES];
+    AP_Int8  att_Comp;
     
     static const struct AP_Param::GroupInfo var_info[];
     
@@ -132,6 +133,8 @@ public:
     float get_offb(uint8_t instance) { return _offb[instance]; }
 
     float get_offc(uint8_t instance) { return _offc[instance]; }
+    
+    uint8_t get_att_Comp(void) {return att_Comp; }
 
     bool flip_measurement(uint8_t instance);
         

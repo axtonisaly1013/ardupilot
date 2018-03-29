@@ -217,7 +217,7 @@ void Plane::set_target_altitude_location(const Location &loc)
 int32_t Plane::relative_target_altitude_cm(void)
 {
 
-    return target_altitude.amsl_cm;
+    return dist_above_water;
 }
 
 /*

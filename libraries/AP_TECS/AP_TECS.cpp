@@ -489,7 +489,6 @@ void AP_TECS::_update_speed_demand(void)
 
 void AP_TECS::_update_height_demand(void)
 {
-    /* This is being commented out for a fixed height demand
     // Apply 2 point moving average to demanded height
     _hgt_dem = 0.5f * (_hgt_dem + _hgt_dem_in_old);
     _hgt_dem_in_old = _hgt_dem;
@@ -563,9 +562,6 @@ void AP_TECS::_update_height_demand(void)
     }
     _hgt_dem_adj_last = _hgt_dem_adj;
     _hgt_dem_adj = new_hgt_dem;
-	*/
-    _hgt_dem_adj_last = _hgt_dem;
-    _hgt_dem_adj = _hgt_dem;
 }
 
 void AP_TECS::_detect_underspeed(void)
@@ -1016,7 +1012,7 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
     _distance_beyond_land_wp = distance_beyond_land_wp;
     _flight_stage = flight_stage;
 
-    // Convert inputsupdate_pitch_th
+    // Convert inputs
     _hgt_dem = hgt_dem_cm * 0.01f;
     _EAS_dem = EAS_dem_cm * 0.01f;
 

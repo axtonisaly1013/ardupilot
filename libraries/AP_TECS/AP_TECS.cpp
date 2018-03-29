@@ -773,7 +773,7 @@ void AP_TECS::_update_throttle_without_airspeed(int16_t throttle_nudge)
     } else { //not landing or not using TECS_LAND_THR parameter
         nomThr = (aparm.throttle_cruise + throttle_nudge)* 0.01f;
     }
-/*	Bypassed for constant throttle
+
     if (_pitch_dem > 0.0f && _PITCHmaxf > 0.0f)
     {
         _throttle_dem = nomThr + (_THRmaxf - nomThr) * _pitch_dem / _PITCHmaxf;
@@ -795,8 +795,6 @@ void AP_TECS::_update_throttle_without_airspeed(int16_t throttle_nudge)
     float cosPhi = sqrtf((rotMat.a.y*rotMat.a.y) + (rotMat.b.y*rotMat.b.y));
     float STEdot_dem = _rollComp * (1.0f/constrain_float(cosPhi * cosPhi , 0.1f, 1.0f) - 1.0f);
     _throttle_dem = _throttle_dem + STEdot_dem / (_STEdot_max - _STEdot_min) * (_THRmaxf - _THRminf);
-*/
-    _throttle_dem = constrain_float(nomThr, _THRminf, _THRmaxf);
 }
 
 void AP_TECS::_detect_bad_descent(void)

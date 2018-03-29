@@ -59,71 +59,35 @@ void Plane::read_rangefinder(void)
 	}
 	prev_rng_time = current_time_rng;
 	float prev_dist = dist_above_water;
-	AP_Float DAW[rangefinder.num_sensors()];
-	AP_Float VAW[rangefinder.num_sensors()];
+	float DAW[rangefinder.num_sensors()];
+	float VAW[rangefinder.num_sensors()];
 	float d_sum = 0;
 	float v_sum = 0;
-	uint8_t compensation_mode = rangefinder.get_att_Comp();
 	
-	switch(compensation_mode) {
-	case 1 :
-        for(uint8_t i = 0; i < rangefinder.num_sensors(); i++) {
-            float wtrdistcm = rangefinder.distance_cm(i);
-            /*
-            Working check; if abs error of new measurment is too large, filter it
-            if (abs(wtrdistcm - prev_dist) / prev_dist) > .30 {
-                wtrdistcm = 0.8*prev_dist + 0.2 * wtrdistcm;
-                }
-            */
-                if(rangefinder.flip_measurement(i)) {
-                    //Where Low Pass filter Lives. Alpha is the RNGFND_EXPO parameter.
-                    DAW[i] = rangefinder.get_expo(i)*(-1.0*wtrdistcm+rangefinder.get_offb(i)*ahrs.cos_pitch()*ahrs.sin_roll()+rangefinder.get_offc(i)*ahrs.cos_pitch()*ahrs.cos_roll()-rangefinder.get_offa(i)*ahrs.sin_pitch())+(1.0-rangefinder.get_expo(i))*prev_dist;
-                }
-                else{
-                    DAW[i] =  rangefinder.get_expo(i)*((rangefinder.get_offb(i)*ahrs.sin_roll()+(rangefinder.get_offc(i)+wtrdistcm)*ahrs.cos_roll())*ahrs.cos_pitch()-rangefinder.get_offa(i)*ahrs.sin_pitch())+(1.0-rangefinder.get_expo(i))*prev_dist;
-                }
-                // update velocity estimate
-                if(rngdt > 0.0) {
-                    VAW[i] = rangefinder.get_expo_vel(i)*((DAW[i]-prev_dist)/rngdt)+(1.0-rangefinder.get_expo_vel(i))*vel_above_water;
-                }
-                // sum estimates for each sensor to be averaged
-                d_sum += DAW[i];
-                v_sum += VAW[i];
-        } 
-        break;
+	for(uint8_t i = 0; i < rangefinder.num_sensors(); i++) {
+        float wtrdistcm = rangefinder.distance_cm(i);
+        /*
+        Working check; if abs error of new measurment is too large, filter it
+        if (abs(wtrdistcm - prev_dist) / prev_dist) > .30 {
+            wtrdistcm = 0.8*prev_dist + 0.2 * wtrdistcm;
+            }
+        */
+            if(rangefinder.flip_measurement(i)) {
+                //Where Low Pass filter Lives. Alpha is the RNGFND_EXPO parameter.
+                DAW[i] = rangefinder.get_expo(i)*(-1.0*wtrdistcm+rangefinder.get_offb(i)*ahrs.cos_pitch()*ahrs.sin_roll()+rangefinder.get_offc(i)*ahrs.cos_pitch()*ahrs.cos_roll()-rangefinder.get_offa(i)*ahrs.sin_pitch())+(1.0-rangefinder.get_expo(i))*prev_dist;
+            }
+            else{
+                DAW[i] =  rangefinder.get_expo(i)*((rangefinder.get_offb(i)*ahrs.sin_roll()+(rangefinder.get_offc(i)+wtrdistcm)*ahrs.cos_roll())*ahrs.cos_pitch()-rangefinder.get_offa(i)*ahrs.sin_pitch())+(1.0-rangefinder.get_expo(i))*prev_dist;
+            }
+            // update velocity estimate
+            if(rngdt > 0.0) {
+                VAW[i] = rangefinder.get_expo_vel(i)*((DAW[i]-prev_dist)/rngdt)+(1.0-rangefinder.get_expo_vel(i))*vel_above_water;
+            }
+            // sum estimates for each sensor to be averaged
+            d_sum += DAW[i];
+            v_sum += VAW[i];
+    } 
         
-    case 0 :
-        for(uint8_t i = 0; i < rangefinder.num_sensors(); i++) {
-                float wtrdistcm = rangefinder.distance_cm(i);
-                /*
-                Working check; if abs error of new measurment is too large, filter it
-                if (abs(wtrdistcm - prev_dist) / prev_dist) > .30 {
-                    wtrdistcm = 0.8*prev_dist + 0.2 * wtrdistcm;
-                    }
-                */
-                    if(rangefinder.flip_measurement(i)) {
-                        //Where Low Pass filter Lives. Alpha is the RNGFND_EXPO parameter.
-                        DAW[i] = rangefinder.get_expo(i)*(-1.0*wtrdistcm + rangefinder.get_offb(i))+(1.0-rangefinder.get_expo(i))*prev_dist;
-                    }
-                    else{
-                        DAW[i] =  rangefinder.get_expo(i)*(wtrdistcm + rangefinder.get_offb(i))+(1.0-rangefinder.get_expo(i))*prev_dist;
-                    }
-                    // update velocity estimate
-                    if(rngdt > 0.0) {
-                        VAW[i] = rangefinder.get_expo_vel(i)*((DAW[i]-prev_dist)/rngdt)+(1.0-rangefinder.get_expo_vel(i))*vel_above_water;
-                    }
-                    // sum estimates for each sensor to be averaged
-                    d_sum += DAW[i];
-                    v_sum += VAW[i];
-            } 
-            break;        
-    
-    // execute if neither case is true, will return static results
-    default: 
-        dist_above_water = prev_dist;
-        vel_above_water = vel_above_water;
-    }
-      
     dist_above_water = d_sum/rangefinder.num_sensors();
     vel_above_water = v_sum/rangefinder.num_sensors();
         

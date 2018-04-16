@@ -939,7 +939,8 @@ void Plane::update_alt()
                                                  distance_beyond_land_wp,
                                                  get_takeoff_pitch_min_cd(),
                                                  throttle_nudge,
-                                                 tecs_hgt_afe(),
+                                                 //tecs_hgt_afe(),
+						 dist_above_water,
                                                  aerodynamic_load_factor);
     }
 }

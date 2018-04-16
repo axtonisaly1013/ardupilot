@@ -252,6 +252,41 @@ const AP_Param::GroupInfo AP_TECS::var_info[] = {
     // @Values: 0:Disable,1:Enable
     // @User: Advanced
     AP_GROUPINFO("FIX_HEIGHT", 29, AP_TECS, _fxheight, 0),
+
+    // @Param: SYNAIRSPEED
+    // @DisplayName: Enable the use of synthetic airspeed
+    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
+    // @Values: 0:Disable,1:Enable
+    // @User: Advanced
+    AP_GROUPINFO("TECS_KP", 30, AP_TECS, _tkp, 0),
+
+    // @Param: SYNAIRSPEED
+    // @DisplayName: Enable the use of synthetic airspeed
+    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
+    // @Values: 0:Disable,1:Enable
+    // @User: Advanced
+    AP_GROUPINFO("TECS_KI", 31, AP_TECS, _tki, 0),
+
+    // @Param: SYNAIRSPEED
+    // @DisplayName: Enable the use of synthetic airspeed
+    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
+    // @Values: 0:Disable,1:Enable
+    // @User: Advanced
+    AP_GROUPINFO("TECS_KD", 32, AP_TECS, _tkd, 0),
+
+    // @Param: SYNAIRSPEED
+    // @DisplayName: Enable the use of synthetic airspeed
+    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
+    // @Values: 0:Disable,1:Enable
+    // @User: Advanced
+    AP_GROUPINFO("TECS_IMAX", 33, AP_TECS, _timax, 100),
+
+    // @Param: SYNAIRSPEED
+    // @DisplayName: Enable the use of synthetic airspeed
+    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
+    // @Values: 0:Disable,1:Enable
+    // @User: Advanced
+    AP_GROUPINFO("TECS_D_HZ", 34, AP_TECS, _thz, 20),
     
     AP_GROUPEND
 };
@@ -952,11 +987,82 @@ void AP_TECS::_update_pitch(void)
     _last_pitch_dem = _pitch_dem;
 }
 
+void AP_TECS::_update_pitch_pid(void)
+{
+    
+    // Bunch of Pseudocode (and this is not python, you can't just end it in .py and say it works...)
+    // Not yet ready for implementation
+    uint32_t tnow = AP_HAL::millis();
+    uint32_t dt = tnow - _last_t;
+    float delta_time;
+    float output = 0.0;
+    if (_last_t == 0 || dt > 1000) {
+        dt = 0;
+
+		// if this PID hasn't been used for a full second then zero
+		// the intergator term. This prevents I buildup from a
+		// previous fight mode from causing a massive return before
+		// the integrator gets a chance to correct itself
+		_integrator_pid=0.0;
+    }
+    _last_t = tnow;
+
+    delta_time = (float)dt / 1000.0f;
+    float error = _height-_hgt_dem;
+    // Compute proportional component
+    output += (_tkp*error);
+
+    // Compute derivative component if time has elapsed
+    if ((fabsf(_tkd) > 0) && (dt > 0)) {
+        float derivative;
+
+		if (isnan(_last_derivative)) {
+			// we've just done a reset, suppress the first derivative
+			// term as we don't want a sudden change in input to cause
+			// a large D output change			
+			derivative = 0;
+			_last_derivative = 0;
+		} else {
+			derivative = (error - _last_error) / delta_time;
+		}
+
+        // discrete low pass filter, cuts out the
+        // high frequency noise that can drive the controller crazy
+        float RC = 1/(2*M_PI*_thz);
+        derivative = _last_derivative +
+                     ((delta_time / (RC + delta_time)) *
+                      (derivative - _last_derivative));
+
+        // update state
+        _last_error             = error;
+        _last_derivative    = derivative;
+
+        // add in derivative component
+        output += (_tkd * derivative);
+    }
+
+    // Compute integral component if time has elapsed
+    if ((fabsf(_tki) > 0) && (dt > 0)) {
+        _integrator_pid             += (error * _tki) * delta_time;
+        if (_integrator_pid < -_timax) {
+            _integrator_pid = -_timax;
+        } else if (_integrator_pid > _timax) {
+            _integrator_pid = _timax;
+        }
+        output                          += _integrator_pid;
+    }
+    _pitch_dem = constrain_float(output, _PITCHminf, _PITCHmaxf);
+
+    _last_pitch_dem = _pitch_dem;
+ 
+}
+
 void AP_TECS::_initialise_states(int32_t ptchMinCO_cd, float hgt_afe)
 {
     // Initialise states and variables if DT > 1 second or in climbout
     if (_DT > 1.0f)
     {
+	_integrator_pid	     = 0.0f;
         _integTHR_state      = 0.0f;
         _integSEB_state      = 0.0f;
         _last_throttle_dem = aparm.throttle_cruise * 0.01f;

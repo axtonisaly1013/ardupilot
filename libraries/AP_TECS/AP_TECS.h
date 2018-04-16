@@ -49,6 +49,16 @@ public:
 
     float get_fixed_height(void) {return _fxheight; }
 
+    float get_tecs_tkp(void) {return _tkp; }
+
+    float get_tecs_tki(void) {return _tki; }
+
+    float get_tecs_tkd(void) {return _tkd; }
+
+    float get_tecs_timax(void) {return _timax; }
+
+    float get_tecs_thz(void) {return _thz; }
+
     // Update the control loop calculations
     void update_pitch_throttle(int32_t hgt_dem_cm,
                                int32_t EAS_dem_cm,
@@ -175,6 +185,11 @@ private:
     AP_Float _maxSinkRate_approach;
     AP_Float _mxheight;
     AP_Float _fxheight;
+    AP_Float _tkp;
+    AP_Float _tki;
+    AP_Float _tkd;
+    AP_Float _timax;
+    AP_Float _thz;
 
     // temporary _pitch_max_limit. Cleared on each loop. Clear when >= 90
     int8_t _pitch_max_limit = 90;
@@ -216,6 +231,12 @@ private:
 
     // throttle demand rate limiter state
     float _last_throttle_dem;
+
+    float _last_t;
+
+    float _last_derivative;
+
+    float _last_error;
 
     // pitch demand rate limiter state
     float _last_pitch_dem;
@@ -306,6 +327,8 @@ private:
     float _SPEdot;
     float _SKEdot;
 
+    float _integrator_pid;
+
     // Specific energy error quantities
     float _STE_error;
 
@@ -363,8 +386,11 @@ private:
     // Detect Bad Descent
     void _detect_bad_descent(void);
 
-    // Update Demanded Pitch Angle
+    // Update Demanded Pitch Angle using TECS
     void _update_pitch(void);
+
+    // Update Demanded Pitch Angle using PID
+    void _update_pitch_pid(void);
 
     // Initialise states and variables
     void _initialise_states(int32_t ptchMinCO_cd, float hgt_afe);

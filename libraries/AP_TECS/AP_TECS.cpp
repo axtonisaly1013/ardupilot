@@ -287,6 +287,20 @@ const AP_Param::GroupInfo AP_TECS::var_info[] = {
     // @Values: 0:Disable,1:Enable
     // @User: Advanced
     AP_GROUPINFO("TECS_D_HZ", 34, AP_TECS, _thz, 20),
+
+    // @Param: SYNAIRSPEED
+    // @DisplayName: Enable the use of synthetic airspeed
+    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
+    // @Values: 0:Disable,1:Enable
+    // @User: Advanced
+    AP_GROUPINFO("TECS_FRCE", 35, AP_TECS, _force, 0),
+
+    // @Param: SYNAIRSPEED
+    // @DisplayName: Enable the use of synthetic airspeed
+    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
+    // @Values: 0:Disable,1:Enable
+    // @User: Advanced
+    AP_GROUPINFO("TECS_PID", 36, AP_TECS, _pid_enable, 0),
     
     AP_GROUPEND
 };
@@ -1240,7 +1254,8 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
     _detect_bad_descent();
 
     // Calculate pitch demand
-    _update_pitch();
+    if (_pid_enable >= 1.0) {_update_pitch_pid();}
+    else {_update_pitch();}
 
     // log to DataFlash
     DataFlash_Class::instance()->Log_Write("TECS", "TimeUS,h,dh,hdem,dhdem,spdem,sp,dsp,ith,iph,th,ph,dspdem,w,f", "QfffffffffffffB",

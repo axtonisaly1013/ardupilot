@@ -59,6 +59,10 @@ public:
 
     float get_tecs_thz(void) {return _thz; }
 
+    float get_tecs_force(void) {return _force; }
+
+    float get_tecs_pid(void) {return _pid_enable; }
+
     // Update the control loop calculations
     void update_pitch_throttle(int32_t hgt_dem_cm,
                                int32_t EAS_dem_cm,
@@ -190,6 +194,8 @@ private:
     AP_Float _tkd;
     AP_Float _timax;
     AP_Float _thz;
+    AP_Float _force;
+    AP_Float _pid_enable;
 
     // temporary _pitch_max_limit. Cleared on each loop. Clear when >= 90
     int8_t _pitch_max_limit = 90;

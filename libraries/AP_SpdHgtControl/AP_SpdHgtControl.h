@@ -28,6 +28,8 @@ public:
 
 	virtual float get_fixed_height(void) = 0;
 
+	virtual float get_tecs_force(void) = 0;
+
 
 	// Update of the pitch and throttle demands
 	// Should be called at 10Hz or faster

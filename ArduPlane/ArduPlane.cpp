@@ -926,7 +926,9 @@ void Plane::update_alt()
 
     update_flight_stage();
 
-    if (auto_throttle_mode && !throttle_suppressed) {        
+    float tecs_force=SpdHgt_Controller->get_tecs_force();
+
+    if (auto_throttle_mode && (!throttle_suppressed || (tecs_force >= 1.0))) {        
 
         float distance_beyond_land_wp = 0;
         if (flight_stage == AP_Vehicle::FixedWing::FLIGHT_LAND && location_passed_point(current_loc, prev_WP_loc, next_WP_loc)) {

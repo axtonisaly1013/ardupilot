@@ -24,8 +24,8 @@
 
 extern const AP_HAL::HAL &hal;
 
-// scaling for 3DR analog airspeed sensor
-#define VOLTS_TO_PASCAL 819
+// scaling for Kavlico analog pressure sensor sensor (0-30 psig range, 0.3-3.3V output) --> 206843 Pa/3V = 68948 Pa/V
+#define VOLTS_TO_PASCAL 68948
 
 AP_Airspeed_Analog::AP_Airspeed_Analog(AP_Airspeed &_frontend, uint8_t _instance) :
     AP_Airspeed_Backend(_frontend, _instance)
@@ -46,6 +46,7 @@ bool AP_Airspeed_Analog::get_differential_pressure(float &pressure)
     }
     // allow pin to change
     _source->set_pin(get_pin());
-    pressure = _source->voltage_average_ratiometric() * VOLTS_TO_PASCAL / get_psi_range();
+    //feed a measurment downstream with units of airspeed (can do calcs without considering density of water)
+    pressure = (_source->voltage_average_ratiometric() * VOLTS_TO_PASCAL / get_psi_range()) *0.001f; 
     return true;
 }

@@ -258,13 +258,6 @@ const AP_Param::GroupInfo AP_TECS::var_info[] = {
     // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
     // @Values: 0:Disable,1:Enable
     // @User: Advanced
-    AP_GROUPINFO("TECS_KP", 30, AP_TECS, _tkp, 0),
-
-    // @Param: SYNAIRSPEED
-    // @DisplayName: Enable the use of synthetic airspeed
-    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
-    // @Values: 0:Disable,1:Enable
-    // @User: Advanced
     AP_GROUPINFO("TECS_KI", 31, AP_TECS, _tki, 0),
 
     // @Param: SYNAIRSPEED
@@ -301,6 +294,27 @@ const AP_Param::GroupInfo AP_TECS::var_info[] = {
     // @Values: 0:Disable,1:Enable
     // @User: Advanced
     AP_GROUPINFO("TECS_PID", 36, AP_TECS, _pid_enable, 0),
+    
+    // @Param: GAIN_CURVE
+    // @DisplayName: Parabolic Coefficient
+    // @Description: Experimentally derive a set of working gains for different velocities; fit a curve to compute gain at any given velocity
+    // @Values: Input should be a vector of 3 constants (a, b, c) describing parabola K_p = av^2 + bv + c
+    // @User: Advanced
+    AP_GROUPINFO("TECS_KP_CURVE_A", 30, AP_TECS, _tkp_ceq_a, 0),
+    
+    // @Param: GAIN_CURVE
+    // @DisplayName: Linear Coefficient
+    // @Description: Experimentally derive a set of working gains for different velocities; fit a curve to compute gain at any given velocity
+    // @Values: Input should be a vector of 3 constants (a, b, c) describing parabola K_p = av^2 + bv + c
+    // @User: Advanced
+    AP_GROUPINFO("TECS_KP_CURVE_B", 37, AP_TECS, _tkp_ceq_b, 0),
+    
+    // @Param: GAIN_CURVE
+    // @DisplayName: Constant Coefficient
+    // @Description: Experimentally derive a set of working gains for different velocities; fit a curve to compute gain at any given velocity
+    // @Values: Input should be a set of 3 constants (a, b, c) describing parabola K_p = av^2 + bv + c
+    // @User: Advanced
+    AP_GROUPINFO("TECS_KP_CURVE_C", 38, AP_TECS, _tkp_ceq_c, 0),
     
     AP_GROUPEND
 };
@@ -1023,6 +1037,10 @@ void AP_TECS::_update_pitch_pid(void)
 
     delta_time = (float)dt / 1000.0f;
     float error = _height-_hgt_dem;
+    
+    // scale proportional gain based on velocity using calibrated curve
+    _tkp = _tkp_ceq_a * _TAS_state*_TAS_state + _tkp_ceq_b * _TAS_state + _tkp_ceq_c;
+    
     // Compute proportional component
     output += (_tkp*error);
 

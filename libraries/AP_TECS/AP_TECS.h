@@ -189,14 +189,19 @@ private:
     AP_Float _maxSinkRate_approach;
     AP_Float _mxheight;
     AP_Float _fxheight;
-    AP_Float _tkp;
     AP_Float _tki;
     AP_Float _tkd;
     AP_Float _timax;
     AP_Float _thz;
     AP_Float _force;
     AP_Float _pid_enable;
+    AP_Float _tkp_ceq_a;
+    AP_Float _tkp_ceq_b;
+    AP_Float _tkp_ceq_c;
 
+    // define variable for keeping track of proportional gain (changes every call of _update_pitch_pid)
+    float _tkp;
+      
     // temporary _pitch_max_limit. Cleared on each loop. Clear when >= 90
     int8_t _pitch_max_limit = 90;
     

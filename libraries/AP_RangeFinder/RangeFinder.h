@@ -137,6 +137,8 @@ public:
     uint8_t get_att_Comp(void) {return att_Comp; }
 
     bool flip_measurement(uint8_t instance);
+    
+    float get_static_pressure(void);
         
     // Handle an incoming DISTANCE_SENSOR message (from a MAVLink enabled range finder)
     void handle_msg(mavlink_message_t *msg);

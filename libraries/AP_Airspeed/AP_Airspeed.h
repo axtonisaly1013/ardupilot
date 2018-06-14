@@ -165,6 +165,12 @@ public:
     // get current primary sensor
     uint8_t get_primary(void) const { return primary; }
     
+    float static_offset = 0.0f;
+    
+    void set_static_offset(float static_pressure) {
+        static_offset = static_pressure;
+    }
+    
 private:
 
     AP_Int8 primary_sensor;
@@ -213,6 +219,7 @@ private:
     
     void read(uint8_t i);
     float get_pressure(uint8_t i);
+    float get_diff_pressure(uint8_t i);
     void update_calibration(uint8_t i, float raw_pressure);
     void update_calibration(uint8_t i, const Vector3f &vground, int16_t max_airspeed_allowed_during_cal);
 

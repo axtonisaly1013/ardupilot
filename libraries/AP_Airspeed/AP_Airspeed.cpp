@@ -270,6 +270,28 @@ float AP_Airspeed::get_pressure(uint8_t i)
     return pressure;
 }
 
+// read the airspeed sensor and offset for external static gage (will update all values sent downstream)
+float AP_Airspeed::get_diff_pressure(uint8_t i)
+{
+    if (!enabled(i)) {
+        return 0;
+    }
+    if (state[i].hil_set) {
+        state[i].healthy = true;
+        return state[i].hil_pressure;
+    }
+    float pressure = 0;
+    if (sensor[i]) {
+        state[i].healthy = sensor[i]->get_differential_pressure(pressure);
+    }
+    
+    // added for decoupled static and dynamic pressure gage on hydrofoil
+    // offset pressure by density of water
+    pressure = (pressure - static_offset) * 0.001f;
+    
+    return pressure;
+}
+    
 // get a temperature reading if possible
 bool AP_Airspeed::get_temperature(uint8_t i, float &temperature)
 {
@@ -341,7 +363,7 @@ void AP_Airspeed::read(uint8_t i)
     if (!enabled(i) || !sensor[i]) {
         return;
     }
-    float raw_pressure = get_pressure(i);
+    float raw_pressure = get_diff_pressure(i);
     if (state[i].cal.start_ms != 0) {
         update_calibration(i, raw_pressure);
     }

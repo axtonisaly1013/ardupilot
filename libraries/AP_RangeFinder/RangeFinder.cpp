@@ -702,6 +702,19 @@ bool RangeFinder::flip_measurement(uint8_t instance) {
     else { return false; };
 }
 
+// convert rangefinder voltage reading into a static pressure value
+float RangeFinder::get_static_pressure(void)
+{
+    float static_pressure = 0.0f;
+    for(uint8_t i=0; i<num_instances; i++) {
+    // Pa = mV * 1/1000 V/mV * m/V * 9810 Pa/m (in water)
+        static_pressure += state[i].voltage_mv * _scaling[i] * 9.81f;
+    }
+    if (num_instances > 0) {
+        return (static_pressure / num_instances);
+    }
+    else {return 0;}
+}
 
 bool RangeFinder::_add_backend(AP_RangeFinder_Backend *backend)
 {

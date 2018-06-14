@@ -123,10 +123,16 @@ void Plane::read_rangefinder(void)
         dist_above_water = prev_dist;
         vel_above_water = vel_above_water;
     }
-      
-    dist_above_water = d_sum/rangefinder.num_sensors();
-    vel_above_water = v_sum/rangefinder.num_sensors();
-        
+    
+    if (rangefinder.num_sensors() > 0) {  
+        dist_above_water = d_sum/rangefinder.num_sensors();
+        vel_above_water = v_sum/rangefinder.num_sensors();
+    }
+    else {
+        dist_above_water = 0;
+        vel_above_water = 0;
+    }
+    
     ahrs.set_h_water(dist_above_water);
     ahrs.set_h_dot_water(vel_above_water);
     // ## TO-DO : Implement Kalman Filter for vel estimate using rangefinder
@@ -161,6 +167,8 @@ void Plane::accel_cal_update() {
 void Plane::read_airspeed(void)
 {
     if (airspeed.enabled()) {
+        float static_pressure = rangefinder.get_static_pressure();
+        airspeed.set_static_offset(static_pressure);
         airspeed.read();
         if (should_log(MASK_LOG_IMU)) {
             Log_Write_Airspeed();

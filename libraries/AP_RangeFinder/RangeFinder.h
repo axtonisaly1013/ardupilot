@@ -107,6 +107,8 @@ public:
     AP_Float _offb[RANGEFINDER_MAX_INSTANCES];
     AP_Float _offc[RANGEFINDER_MAX_INSTANCES];
     AP_Int8  att_Comp;
+    // filtered voltage only used for airspeed sensor
+    float smoothed_voltage;
     
     static const struct AP_Param::GroupInfo var_info[];
     

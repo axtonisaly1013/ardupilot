@@ -219,6 +219,9 @@ void Plane::read_radio()
         airspeed_nudge_cm = 0;
         throttle_nudge = 0;
     }
+    
+    float throttle = SRV_Channels::get_output_scaled(SRV_Channel::k_throttle);
+    throttle_passthru = constrain_int16(throttle, 0, 100);
 
     rudder_arm_disarm_check();
 

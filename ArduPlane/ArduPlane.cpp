@@ -940,7 +940,7 @@ void Plane::update_alt()
                                                  flight_stage,
                                                  distance_beyond_land_wp,
                                                  get_takeoff_pitch_min_cd(),
-                                                 throttle_nudge,
+                                                 throttle_passthru,
                                                  //tecs_hgt_afe(),
 						 dist_above_water,
                                                  aerodynamic_load_factor);
@@ -952,10 +952,13 @@ void Plane::update_alt()
  */
 void Plane::update_flight_stage(void)
 {
+    float tecs_force=SpdHgt_Controller->get_tecs_force();
     // Update the speed & height controller states
-    if (auto_throttle_mode && !throttle_suppressed) {        
+    if (auto_throttle_mode && (!throttle_suppressed || (tecs_force >= 1.0))) {        
         if (control_mode==AUTO) {
-            if (quadplane.in_vtol_auto()) {
+            if(tecs_force >= 1.0){
+                set_flight_stage(AP_Vehicle::FixedWing::FLIGHT_NORMAL);
+            } else if (quadplane.in_vtol_auto()) {
                 set_flight_stage(AP_Vehicle::FixedWing::FLIGHT_VTOL);
             } else if (auto_state.takeoff_complete == false) {
                 set_flight_stage(AP_Vehicle::FixedWing::FLIGHT_TAKEOFF);

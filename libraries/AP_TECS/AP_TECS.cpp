@@ -265,14 +265,14 @@ const AP_Param::GroupInfo AP_TECS::var_info[] = {
     // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
     // @Values: 0:Disable,1:Enable
     // @User: Advanced
-    AP_GROUPINFO("TECS_KI", 31, AP_TECS, _tki, 0),
+    AP_GROUPINFO("TECS_KI", 31, AP_TECS, _tki_0, 0),
 
     // @Param: SYNAIRSPEED
     // @DisplayName: Enable the use of synthetic airspeed
     // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
     // @Values: 0:Disable,1:Enable
     // @User: Advanced
-    AP_GROUPINFO("TECS_KD", 32, AP_TECS, _tkd, 0),
+    AP_GROUPINFO("TECS_KD", 32, AP_TECS, _tkd_0, 0),
 
     // @Param: SYNAIRSPEED
     // @DisplayName: Enable the use of synthetic airspeed
@@ -301,6 +301,20 @@ const AP_Param::GroupInfo AP_TECS::var_info[] = {
     // @Values: 0:Disable,1:Enable
     // @User: Advanced
     AP_GROUPINFO("TECS_PID", 36, AP_TECS, _pid_enable, 0),
+    
+    // @Param: THROT_FRCE
+    // @DisplayName: Force the use of manual throttle
+    // @Description: Forces uses of 'update_throttle_without_airspeed' method, which is configured for throttle pass through; allows use of airspeed for pitch PID while manually controlling throttle
+    // @Values: 0:Disable,1:Enable
+    // @User: Advanced
+    AP_GROUPINFO("THROT_FRCE", 37, AP_TECS, _manual_throt_enable, 0),
+    
+    // @Param: GAIN_SCALE
+    // @DisplayName: Scale PID Gains based on velocity
+    // @Description: P, I, and D terms for height controller scale like: K0/v^2
+    // @Values: 0:Disable,1:Enable
+    // @User: Advanced
+    AP_GROUPINFO("GAIN_SCALE", 38, AP_TECS, _gain_scale, 0),    
     
 
         
@@ -822,7 +836,7 @@ void AP_TECS::_update_throttle_without_airspeed(int16_t throttle_nudge)
     if (_flags.is_doing_auto_land && _landThrottle >= 0) {
         nomThr = (_landThrottle + throttle_nudge) * 0.01f;
     } else { //not landing or not using TECS_LAND_THR parameter
-        nomThr = (aparm.throttle_cruise + throttle_nudge)* 0.01f;
+        nomThr = throttle_nudge * 0.01f;
     }
 /*	Bypassed for constant throttle
     if (_pitch_dem > 0.0f && _PITCHmaxf > 0.0f)
@@ -1005,9 +1019,6 @@ void AP_TECS::_update_pitch(void)
 
 void AP_TECS::_update_pitch_pid(void)
 {
-    
-    // Bunch of Pseudocode (and this is not python, you can't just end it in .py and say it works...)
-    // Not yet ready for implementation
     uint32_t tnow = AP_HAL::millis();
     uint32_t dt = tnow - _last_t;
     float delta_time;
@@ -1026,8 +1037,18 @@ void AP_TECS::_update_pitch_pid(void)
     delta_time = (float)dt / 1000.0f;
     float error = _height-_hgt_dem;
     
-    // scale proportional gain based on velocity using calibrated curve
-    _tkp = _tkp_0/(_TAS_state*_TAS_state);
+    // scale PID gains based on velocity
+    if(_gain_scale == 1) {
+        _tkp = _tkp_0/(_TAS_state*_TAS_state);
+        _tkd = _tkd_0/(_TAS_state*_TAS_state);
+        _tki = _tki_0/(_TAS_state*_TAS_state);
+    }
+    else {
+        _tkp = _tkp_0;
+        _tkd = _tkd_0;
+        _tki = _tki_0;
+    }
+   
     
     // Compute proportional component
     output += (_tkp*error);
@@ -1241,7 +1262,7 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
     // Detect underspeed condition
     _detect_underspeed();
 
-    // Calculate specific energy quantitiues
+    // Calculate specific energy quantities
     _update_energies();
 
     // Calculate throttle demand - use simple pitch to throttle if no
@@ -1249,7 +1270,7 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
     // Note that caller can demand the use of
     // synthetic airspeed for one loop if needed. This is required
     // during QuadPlane transition when pitch is constrained
-    if (_ahrs.airspeed_sensor_enabled() || _use_synthetic_airspeed || _use_synthetic_airspeed_once) {
+    if (((_ahrs.airspeed_sensor_enabled() || _use_synthetic_airspeed) && !_manual_throt_enable) || _use_synthetic_airspeed_once) {
         _update_throttle_with_airspeed();
         _use_synthetic_airspeed_once = false;
     } else {

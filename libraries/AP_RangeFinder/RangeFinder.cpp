@@ -692,6 +692,11 @@ void RangeFinder::update(void)
             update_pre_arm_check(i);
         }
     }
+    // apply low pass filter to rangefinder data (configured for one rangefinder only)
+    if (num_instances > 0) {
+        smoothed_voltage = _expo[0] * state[0].voltage_mv + (1-_expo[0]) * smoothed_voltage;
+    }
+    else {smoothed_voltage = 0;}
 }
 
 /*  returns true if rangefinder reading needs to be updated and false
@@ -702,16 +707,12 @@ bool RangeFinder::flip_measurement(uint8_t instance) {
     else { return false; };
 }
 
-// convert rangefinder voltage reading into a static pressure value
+// convert filtered voltage reading into a static pressure value (configured for one rangefinder only)
 float RangeFinder::get_static_pressure(void)
 {
-    float static_pressure = 0.0f;
-    for(uint8_t i=0; i<num_instances; i++) {
     // Pa = mV * 1/1000 V/mV * m/V * 9810 Pa/m (in water)
-        static_pressure += state[i].voltage_mv * _scaling[i] * 9.81f;
-    }
     if (num_instances > 0) {
-        return (static_pressure / num_instances);
+        return (smoothed_voltage * _scaling[0] * 9.81f);
     }
     else {return 0;}
 }

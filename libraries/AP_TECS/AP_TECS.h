@@ -190,15 +190,19 @@ private:
     AP_Float _mxheight;
     AP_Float _fxheight;
     AP_Float _tkp_0;
-    AP_Float _tki;
-    AP_Float _tkd;
+    AP_Float _tki_0;
+    AP_Float _tkd_0;
     AP_Float _timax;
     AP_Float _thz;
     AP_Float _force;
     AP_Float _pid_enable;
+    AP_Int8 _manual_throt_enable;
+    AP_Int8 _gain_scale;
 
     // define variable for keeping track of proportional gain (changes every call of _update_pitch_pid)
     float _tkp;
+    float _tki;
+    float _tkd;
       
     // temporary _pitch_max_limit. Cleared on each loop. Clear when >= 90
     int8_t _pitch_max_limit = 90;

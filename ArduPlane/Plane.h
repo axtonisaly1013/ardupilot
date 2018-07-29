@@ -386,6 +386,9 @@ float prev_rng_time =0.0;
     // Similar to airspeed_nudge, but used when no airspeed sensor.
     // 0-(throttle_max - throttle_cruise) : throttle nudge in Auto mode using top 1/2 of throttle stick travel
     int16_t throttle_nudge;
+    
+    // constrained throttle command from remote for use with TECS controller
+    int16_t throttle_passthru;
 
     // receiver RSSI
     uint8_t receiver_rssi;

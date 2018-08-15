@@ -107,37 +107,41 @@ void Plane::calc_airspeed_errors()
     // may be using synthetic airspeed
     ahrs.airspeed_estimate(&airspeed_measured);
 
-    // FBW_B airspeed target
-    if (control_mode == FLY_BY_WIRE_B || 
-        control_mode == CRUISE) {
-        target_airspeed_cm = ((int32_t)(aparm.airspeed_max -
-                                        aparm.airspeed_min) *
-                              channel_throttle->get_control_in()) +
-                             ((int32_t)aparm.airspeed_min * 100);
+//    // FBW_B airspeed target
+//    if (control_mode == FLY_BY_WIRE_B || 
+//        control_mode == CRUISE) {
+//        target_airspeed_cm = ((int32_t)(aparm.airspeed_max -
+//                                        aparm.airspeed_min) *
+//                              channel_throttle->get_control_in()) +
+//                             ((int32_t)aparm.airspeed_min * 100);
+//
+//    } else if (flight_stage == AP_Vehicle::FixedWing::FLIGHT_LAND) {
+//        // Landing airspeed target
+//        target_airspeed_cm = landing.get_target_airspeed_cm();
+//
+//    } else {
+//        // Normal airspeed target
+//        target_airspeed_cm = aparm.airspeed_cruise_cm;
+//    }
+//
+//    // Set target to current airspeed + ground speed undershoot,
+//    // but only when this is faster than the target airspeed commanded
+//    // above.
+//    if (control_mode >= FLY_BY_WIRE_B && (aparm.min_gndspeed_cm > 0)) {
+//        int32_t min_gnd_target_airspeed = airspeed_measured*100 + groundspeed_undershoot;
+//        if (min_gnd_target_airspeed > target_airspeed_cm) {
+//            target_airspeed_cm = min_gnd_target_airspeed;
+//        }
+//    }
+//
+//    // Bump up the target airspeed based on throttle nudging
+//    if (control_mode >= AUTO && airspeed_nudge_cm > 0) {
+//        target_airspeed_cm += airspeed_nudge_cm;
+//    }
 
-    } else if (flight_stage == AP_Vehicle::FixedWing::FLIGHT_LAND) {
-        // Landing airspeed target
-        target_airspeed_cm = landing.get_target_airspeed_cm();
-
-    } else {
-        // Normal airspeed target
-        target_airspeed_cm = aparm.airspeed_cruise_cm;
-    }
-
-    // Set target to current airspeed + ground speed undershoot,
-    // but only when this is faster than the target airspeed commanded
-    // above.
-    if (control_mode >= FLY_BY_WIRE_B && (aparm.min_gndspeed_cm > 0)) {
-        int32_t min_gnd_target_airspeed = airspeed_measured*100 + groundspeed_undershoot;
-        if (min_gnd_target_airspeed > target_airspeed_cm) {
-            target_airspeed_cm = min_gnd_target_airspeed;
-        }
-    }
-
-    // Bump up the target airspeed based on throttle nudging
-    if (control_mode >= AUTO && airspeed_nudge_cm > 0) {
-        target_airspeed_cm += airspeed_nudge_cm;
-    }
+    //Simplified airspeed targets for hydrofoil; always use throttle to command a value btw/ 0 and max airspeed
+    target_airspeed_cm = ((int32_t)(aparm.airspeed_max) *
+                          channel_throttle->get_control_in());
 
     // Apply airspeed limit
     if (target_airspeed_cm > (aparm.airspeed_max * 100))

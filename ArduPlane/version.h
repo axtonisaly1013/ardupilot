@@ -2,7 +2,7 @@
 
 #include "ap_version.h"
 
-#define THISFIRMWARE "GLADoS V0.1.3.3AXTON"
+#define THISFIRMWARE "P_ALPHA V0.2"
 #define FIRMWARE_VERSION 3,8,5,FIRMWARE_VERSION_TYPE_BETA
 
 #ifndef GIT_VERSION

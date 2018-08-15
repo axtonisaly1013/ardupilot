@@ -239,75 +239,75 @@ const AP_Param::GroupInfo AP_TECS::var_info[] = {
     // @User: Advanced
     AP_GROUPINFO("SYNAIRSPEED", 27, AP_TECS, _use_synthetic_airspeed, 0),
 
-    // @Param: SYNAIRSPEED
-    // @DisplayName: Enable the use of synthetic airspeed
-    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
+    // @Param: SMAX_HEIGHT
+    // @DisplayName: Maximum height for altitude tracking **NOT IMPLEMENTED YET**
+    // @Description: Specifies max height vehicle may rise from water to prevent breaching
     // @Values: 0:Disable,1:Enable
     // @User: Advanced
     AP_GROUPINFO("MAX_HEIGHT", 28, AP_TECS, _mxheight, 0),
 
-    // @Param: SYNAIRSPEED
-    // @DisplayName: Enable the use of synthetic airspeed
-    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
-    // @Values: 0:Disable,1:Enable
+    // @Param: FIX_HEIGHT
+    // @DisplayName: Constant height setpoint for altitude tracking
+    // @Description: Tracks desired height specified directly by rangefinder sensor location
+    // @Values: Input units must be in cm; Negative numbers within flyable range of vehicle (-25 to -55 cm appropriate)
     // @User: Advanced
     AP_GROUPINFO("FIX_HEIGHT", 29, AP_TECS, _fxheight, 0),
     
-    // @Param: TECS_KP_0
+    // @Param: PCH_KP_0
     // @DisplayName: Unscaled proportional gain for pitch
     // @Description: Value representing KP at 1 m/s
     // @Values: ...
     // @User: Advanced
-    AP_GROUPINFO("TECS_KP_0", 30, AP_TECS, _tkp_0, 0),
+    AP_GROUPINFO("PCH_KP_0", 30, AP_TECS, _pkp_0, 0),
     
-    // @Param: SYNAIRSPEED
-    // @DisplayName: Enable the use of synthetic airspeed
-    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
-    // @Values: 0:Disable,1:Enable
+    // @Param: PCH_KI_0
+    // @DisplayName: Unscaled integral Gain for pitch PID
+    // @Description: ...
+    // @Values: ...
     // @User: Advanced
-    AP_GROUPINFO("TECS_KI", 31, AP_TECS, _tki_0, 0),
+    AP_GROUPINFO("PCH_KI_0", 31, AP_TECS, _pki_0, 0),
 
-    // @Param: SYNAIRSPEED
-    // @DisplayName: Enable the use of synthetic airspeed
-    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
-    // @Values: 0:Disable,1:Enable
+    // @Param: PCH_KD_0
+    // @DisplayName: Unscaled derivative Gain for pitch PID
+    // @Description: ...
+    // @Values: ...
     // @User: Advanced
-    AP_GROUPINFO("TECS_KD", 32, AP_TECS, _tkd_0, 0),
+    AP_GROUPINFO("PCH_KD_0", 32, AP_TECS, _pkd_0, 0),
 
-    // @Param: SYNAIRSPEED
-    // @DisplayName: Enable the use of synthetic airspeed
-    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
-    // @Values: 0:Disable,1:Enable
+    // @Param: IMAX
+    // @DisplayName: Integral term limit
+    // @Description: Prevent integral windup by setting an upper bound for the term
+    // @Values: ...
     // @User: Advanced
-    AP_GROUPINFO("TECS_IMAX", 33, AP_TECS, _timax, 100),
+    AP_GROUPINFO("IMAX", 33, AP_TECS, _timax, 100),
 
-    // @Param: SYNAIRSPEED
-    // @DisplayName: Enable the use of synthetic airspeed
-    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
-    // @Values: 0:Disable,1:Enable
+    // @Param: D_HZ
+    // @DisplayName: Cuttoff frequency for derivative term filter used in PID controllers
+    // @Description: ...
+    // @Values: Value in HZ
     // @User: Advanced
-    AP_GROUPINFO("TECS_D_HZ", 34, AP_TECS, _thz, 20),
+    AP_GROUPINFO("D_HZ", 34, AP_TECS, _thz, 20),
 
-    // @Param: SYNAIRSPEED
-    // @DisplayName: Enable the use of synthetic airspeed
-    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
-    // @Values: 0:Disable,1:Enable
+    // @Param: FRCE
+    // @DisplayName: Force TECS to run in many situation which it normally would not
+    // @Description: ...
+    // @Values: 0:Disable,1:Force
     // @User: Advanced
-    AP_GROUPINFO("TECS_FRCE", 35, AP_TECS, _force, 0),
+    AP_GROUPINFO("FRCE", 35, AP_TECS, _force, 0),
 
-    // @Param: SYNAIRSPEED
-    // @DisplayName: Enable the use of synthetic airspeed
-    // @Description: This enable the use of synthetic airspeed for aircraft that don't have a real airspeed sensor. This is useful for development testing where the user is aware of the considerable limitations of the synthetic airspeed system, such as very poor estimates when a wind estimate is not accurate. Do not enable this option unless you fully understand the limitations of a synthetic airspeed estimate.
-    // @Values: 0:Disable,1:Enable
+    // @Param: PCH_PID
+    // @DisplayName: Enable height setpoint PID controller for calculating vehicle pitch
+    // @Description: ...
+    // @Values: ...
     // @User: Advanced
-    AP_GROUPINFO("TECS_PID", 36, AP_TECS, _pid_enable, 0),
-    
-    // @Param: THROT_FRCE
+    AP_GROUPINFO("PCH_PID", 36, AP_TECS, _pitch_pid_enable, 0),
+        
+    // @Param: THT_FRCE
     // @DisplayName: Force the use of manual throttle
     // @Description: Forces uses of 'update_throttle_without_airspeed' method, which is configured for throttle pass through; allows use of airspeed for pitch PID while manually controlling throttle
     // @Values: 0:Disable,1:Enable
     // @User: Advanced
-    AP_GROUPINFO("THROT_FRCE", 37, AP_TECS, _manual_throt_enable, 0),
+    AP_GROUPINFO("THT_FRCE", 37, AP_TECS, _manual_throt_enable, 0),
     
     // @Param: GAIN_SCALE
     // @DisplayName: Scale PID Gains based on velocity
@@ -315,26 +315,69 @@ const AP_Param::GroupInfo AP_TECS::var_info[] = {
     // @Values: 0:Disable,1:Enable
     // @User: Advanced
     AP_GROUPINFO("GAIN_SCALE", 38, AP_TECS, _gain_scale, 0),    
+       
+    // @Param: PCH_FFGN
+    // @DisplayName: Feedforward trim pitch values for level flight
+    // @Description: Gain for feedforward control
+    // @Values: Depends on vehicle configuration; setting to 0 will disable feedforward
+    // @User: Advanced
+    AP_GROUPINFO("PCH_FFGN", 39, AP_TECS, _pitch_ff_gain, 0.0),   
+        
+    // @Param: THT_PID
+    // @DisplayName: Throttle PID controller
+    // @Description: Enable PID controller for calculating vehicle throttle based on airspeed
+    // @Values: ...
+    // @User: Advanced
+    AP_GROUPINFO("THT_PID", 40, AP_TECS, _throttle_pid_enable, 0),
     
+    // @Param: THT_KP_0
+    // @DisplayName: Unscaled Gain
+    // @Description: This is the proportional throttle gain representing flight at 1 m/s
+    // @Values: ...
+    // @User: Advanced
+    AP_GROUPINFO("THT_KP_0", 41, AP_TECS, _tkp_0, 0),
+    
+    // @Param: THT_KI_0
+    // @DisplayName: Integral Gain for throttle PID
+    // @Description: ...
+    // @Values: ...
+    // @User: Advanced
+    AP_GROUPINFO("THT_KI_0", 42, AP_TECS, _tki_0, 0),
+
+    // @Param: THT_KD
+    // @DisplayName: Derivative Gain for throttle PID
+    // @Description: ...
+    // @Values: ...
+    // @User: Advanced
+    AP_GROUPINFO("THT_KD_0", 43, AP_TECS, _tkd_0, 0),
+    
+    // @Param: ALT_TEST
+    // @DisplayName: Test to check possible method of maintaining tracking of TECS_FIX_HEIGHT during waypoint navigation
+    // @Description: ...
+    // @Values: 0: regular function, 1: Enable test
+    // @User: Advanced
+    AP_GROUPINFO("ALT_TEST", 44, AP_TECS, _alt_test, 0),
+    
+    // @Param: ALT_TEST_2
+    // @DisplayName: Testing effect of changing 'set_target_altitude_current' method
+    // @Description: ...
+    // @Values: 0: regular function, 1: Enable test
+    // @User: Advanced
+    AP_GROUPINFO("ALT_TEST_2", 45, AP_TECS, _alt_test_2, 0),
+    
+    // @Param: TEST
+    // @DisplayName: Testing changes in stock TECS algorithm (feedforward & potential energy disabled)
+    // @Description: ...
+    // @Values: 0: regular function, 1: Enable test
+    // @User: Advanced
+    AP_GROUPINFO("TEST", 46, AP_TECS, _test, 0),
 
         
     AP_GROUPEND
 };
 
-/*
- *  Written by Paul Riseborough 2013 to provide:
- *  - Combined control of speed and height using throttle to control
- *    total energy and pitch angle to control exchange of energy between
- *    potential and kinetic.
- *    Selectable speed or height priority modes when calculating pitch angle
- *  - Fallback mode when no airspeed measurement is available that
- *    sets throttle based on height rate demand and switches pitch angle control to
- *    height priority
- *  - Underspeed protection that demands maximum throttle and switches pitch angle control
- *    to speed priority mode
- *  - Relative ease of tuning through use of intuitive time constant, integrator and damping gains and the use
- *    of easy to measure aircraft performance data
- *
+/* Standing on the back of code written by:
+ *  Written by Paul Riseborough 2013
  */
 
 void AP_TECS::update_50hz(void)
@@ -499,14 +542,14 @@ void AP_TECS::_update_speed(float load_factor)
     float aspdErr = (_EAS * EAS2TAS) - _TAS_state;
     float integDTAS_input = aspdErr * _spdCompFiltOmega * _spdCompFiltOmega;
     // Prevent state from winding up
-    if (_TAS_state < 3.1f) {
+    if (_TAS_state < 0.2f) {
         integDTAS_input = MAX(integDTAS_input , 0.0f);
     }
     _integDTAS_state = _integDTAS_state + integDTAS_input * DT;
     float TAS_input = _integDTAS_state + _vel_dot + aspdErr * _spdCompFiltOmega * 1.4142f;
     _TAS_state = _TAS_state + TAS_input * DT;
     // limit the airspeed to a minimum of 3 m/s
-    _TAS_state = MAX(_TAS_state, 3.0f);
+    _TAS_state = MAX(_TAS_state, 0.1f);
 
 }
 
@@ -517,17 +560,17 @@ void AP_TECS::_update_speed_demand(void)
     // This will minimise the rate of descent resulting from an engine failure,
     // enable the maximum climb rate to be achieved and prevent continued full power descent
     // into the ground due to an unachievable airspeed value
-    if ((_flags.badDescent) || (_flags.underspeed))
-    {
-        _TAS_dem     = _TASmin;
-    }
+//    if ((_flags.badDescent) || (_flags.underspeed))
+//    {
+//        _TAS_dem     = _TASmin;
+//    }
 
     // Constrain speed demand, taking into account the load factor
     _TAS_dem = constrain_float(_TAS_dem, _TASmin, _TASmax);
 
     // calculate velocity rate limits based on physical performance limits
     // provision to use a different rate limit if bad descent or underspeed condition exists
-    // Use 50% of maximum energy rate to allow margin for total energy contgroller
+    // Use 50% of maximum energy rate to allow margin for total energy controller
     float velRateMax = 0.5f * _STEdot_max / _TAS_state;
     float velRateMin = 0.5f * _STEdot_min / _TAS_state;
 
@@ -552,132 +595,19 @@ void AP_TECS::_update_speed_demand(void)
     _TAS_dem_last = _TAS_dem;
 }
 
-void AP_TECS::_update_height_demand(void)
-{
-    /* This is being commented out for a fixed height demand
-    // Apply 2 point moving average to demanded height
-    _hgt_dem = 0.5f * (_hgt_dem + _hgt_dem_in_old);
-    _hgt_dem_in_old = _hgt_dem;
-
-    float max_sink_rate = _maxSinkRate;
-    if (_maxSinkRate_approach > 0 && _flags.is_doing_auto_land) {
-        // special sink rate for approach to accommodate steep slopes and reverse thrust.
-        // A special check must be done to see if we're LANDing on approach but also if
-        // we're in that tiny window just starting NAV_LAND but still in NORMAL mode. If
-        // we have a steep slope with a short approach we'll want to allow acquiring the
-        // glide slope right away.
-        max_sink_rate = _maxSinkRate_approach;
-    }
-
-    // Limit height rate of change
-    if ((_hgt_dem - _hgt_dem_prev) > (_maxClimbRate * 0.1f))
-    {
-        _hgt_dem = _hgt_dem_prev + _maxClimbRate * 0.1f;
-    }
-    else if ((_hgt_dem - _hgt_dem_prev) < (-max_sink_rate * 0.1f))
-    {
-        _hgt_dem = _hgt_dem_prev - max_sink_rate * 0.1f;
-    }
-    _hgt_dem_prev = _hgt_dem;
-
-    // Apply first order lag to height demand
-    _hgt_dem_adj = 0.05f * _hgt_dem + 0.95f * _hgt_dem_adj_last;
-
-    // when flaring force height rate demand to the
-    // configured sink rate and adjust the demanded height to
-    // be kinematically consistent with the height rate.
-    if (_landing.is_flaring()) {
-        _integSEB_state = 0;
-        if (_flare_counter == 0) {
-            _hgt_rate_dem = _climb_rate;
-            _land_hgt_dem = _hgt_dem_adj;
-        }
-
-        // adjust the flare sink rate to increase/decrease as your travel further beyond the land wp
-        float land_sink_rate_adj = _land_sink + _land_sink_rate_change*_distance_beyond_land_wp;
-
-        // bring it in over 1s to prevent overshoot
-        if (_flare_counter < 10) {
-            _hgt_rate_dem = _hgt_rate_dem * 0.8f - 0.2f * land_sink_rate_adj;
-            _flare_counter++;
-        } else {
-            _hgt_rate_dem = - land_sink_rate_adj;
-        }
-        _land_hgt_dem += 0.1f * _hgt_rate_dem;
-        _hgt_dem_adj = _land_hgt_dem;
-    } else {
-        _hgt_rate_dem = (_hgt_dem_adj - _hgt_dem_adj_last) / 0.1f;
-        _flare_counter = 0;
-    }
-
-    // for landing approach we will predict ahead by the time constant
-    // plus the lag produced by the first order filter. This avoids a
-    // lagged height demand while constantly descending which causes
-    // us to consistently be above the desired glide slope. This will
-    // be replaced with a better zero-lag filter in the future.
-    float new_hgt_dem = _hgt_dem_adj;
-    if (_flags.is_doing_auto_land) {
-        if (hgt_dem_lag_filter_slew < 1) {
-            hgt_dem_lag_filter_slew += 0.1f; // increment at 10Hz to gradually apply the compensation at first
-        } else {
-            hgt_dem_lag_filter_slew = 1;
-        }
-        new_hgt_dem += hgt_dem_lag_filter_slew*(_hgt_dem_adj - _hgt_dem_adj_last)*10.0f*(timeConstant()+1);
-    } else {
-        hgt_dem_lag_filter_slew = 0;
-    }
-    _hgt_dem_adj_last = _hgt_dem_adj;
-    _hgt_dem_adj = new_hgt_dem;
-	*/
-    _hgt_dem_adj_last = _hgt_dem;
-    _hgt_dem_adj = _hgt_dem;
-}
-
-void AP_TECS::_detect_underspeed(void)
-{
-    // see if we can clear a previous underspeed condition. We clear
-    // it if we are now more than 15% above min speed, and haven't
-    // been below min speed for at least 3 seconds.
-    if (_flags.underspeed &&
-        _TAS_state >= _TASmin * 1.15f &&
-        AP_HAL::millis() - _underspeed_start_ms > 3000U) {
-        _flags.underspeed = false;
-    }
-
-    if (_flight_stage == AP_Vehicle::FixedWing::FLIGHT_VTOL) {
-        _flags.underspeed = false;
-    } else if (((_TAS_state < _TASmin * 0.9f) &&
-            (_throttle_dem >= _THRmaxf * 0.95f) &&
-            !_landing.is_flaring()) ||
-            ((_height < _hgt_dem_adj) && _flags.underspeed))
-    {
-        _flags.underspeed = true;
-        if (_TAS_state < _TASmin * 0.9f) {
-            // reset start time as we are still underspeed
-            _underspeed_start_ms = AP_HAL::millis();
-        }
-    }
-    else
-    {
-        // this clears underspeed if we reach our demanded height and
-        // we are either below 95% throttle or we above 90% of min
-        // airspeed
-        _flags.underspeed = false;
-    }
-}
-
 void AP_TECS::_update_energies(void)
 {
     // Calculate specific energy demands
-    _SPE_dem = _hgt_dem_adj * GRAVITY_MSS;
+    // offset potential energy to maintain positive estimate
+    _SPE_dem = (_fxheight * 0.01f * GRAVITY_MSS) + _mxheight;
     _SKE_dem = 0.5f * _TAS_dem_adj * _TAS_dem_adj;
 
     // Calculate specific energy rate demands
-    _SPEdot_dem = _hgt_rate_dem * GRAVITY_MSS;
+    _SPEdot_dem = 0.0f;
     _SKEdot_dem = _TAS_state * _TAS_rate_dem;
 
     // Calculate specific energy
-    _SPE_est = _height * GRAVITY_MSS;
+    _SPE_est = (_height * GRAVITY_MSS) + _mxheight;
     _SKE_est = 0.5f * _TAS_state * _TAS_state;
 
     // Calculate specific energy rate
@@ -713,6 +643,10 @@ void AP_TECS::_update_throttle_with_airspeed(void)
     // Calculate limits to be applied to potential energy error to prevent over or underspeed occurring due to large height errors
     float SPE_err_max = 0.5f * _TASmax * _TASmax - _SKE_dem;
     float SPE_err_min = 0.5f * _TASmin * _TASmin - _SKE_dem;
+
+    if(_test == 1) {
+        SPE_err_max = SPE_err_min = 0; 
+    }
 
     if (_flight_stage == AP_Vehicle::FixedWing::FLIGHT_VTOL) {
         /*
@@ -753,8 +687,12 @@ void AP_TECS::_update_throttle_with_airspeed(void)
         // drag increase during turns.
         float cosPhi = sqrtf((rotMat.a.y*rotMat.a.y) + (rotMat.b.y*rotMat.b.y));
         STEdot_dem = STEdot_dem + _rollComp * (1.0f/constrain_float(cosPhi * cosPhi , 0.1f, 1.0f) - 1.0f);
-        ff_throttle = nomThr + STEdot_dem / (_STEdot_max - _STEdot_min) * (_THRmaxf - _THRminf);
-
+        if(_test == 1) {
+            ff_throttle = 10.763 * _TAS_state + 11.375; 
+        }
+        else {
+            ff_throttle = nomThr + STEdot_dem / (_STEdot_max - _STEdot_min) * (_THRmaxf - _THRminf);
+        }
         // Calculate PD + FF throttle
         float throttle_damp = _thrDamp;
         if (_flags.is_doing_auto_land && !is_zero(_land_throttle_damp)) {
@@ -862,36 +800,6 @@ void AP_TECS::_update_throttle_without_airspeed(int16_t throttle_nudge)
     _throttle_dem = _throttle_dem + STEdot_dem / (_STEdot_max - _STEdot_min) * (_THRmaxf - _THRminf);
 */
     _throttle_dem = constrain_float(nomThr, _THRminf, _THRmaxf);
-}
-
-void AP_TECS::_detect_bad_descent(void)
-{
-    // Detect a demanded airspeed too high for the aircraft to achieve. This will be
-    // evident by the the following conditions:
-    // 1) Underspeed protection not active
-    // 2) Specific total energy error > 200 (greater than ~20m height error)
-    // 3) Specific total energy reducing
-    // 4) throttle demand > 90%
-    // If these four conditions exist simultaneously, then the protection
-    // mode will be activated.
-    // Once active, the following condition are required to stay in the mode
-    // 1) Underspeed protection not active
-    // 2) Specific total energy error > 0
-    // This mode will produce an undulating speed and height response as it cuts in and out but will prevent the aircraft from descending into the ground if an unachievable speed demand is set
-    float STEdot = _SPEdot + _SKEdot;
-    if ((!_flags.underspeed && (_STE_error > 200.0f) && (STEdot < 0.0f) && (_throttle_dem >= _THRmaxf * 0.9f)) || (_flags.badDescent && !_flags.underspeed && (_STE_error > 0.0f)))
-    {
-        _flags.badDescent = true;
-    }
-    else
-    {
-        _flags.badDescent = false;
-    }
-
-    // when soaring is active we never trigger a bad descent
-    if (_soaring_controller.is_active() && _soaring_controller.get_throttle_suppressed()) {
-        _flags.badDescent = false;        
-    }
 }
 
 void AP_TECS::_update_pitch(void)
@@ -1020,22 +928,28 @@ void AP_TECS::_update_pitch(void)
 void AP_TECS::_update_pitch_pid(void)
 {
     uint32_t tnow = AP_HAL::millis();
-    uint32_t dt = tnow - _last_t;
+    uint32_t dt = tnow - _last_t_p;
     float delta_time;
     float output = 0.0;
-    if (_last_t == 0 || dt > 1000) {
+     
+    // feedfoward trim pitch from theoretically derived values
+    const Matrix3f &rotMat = _ahrs.get_rotation_body_to_ned();
+    float cosPhi = sqrtf((rotMat.a.y*rotMat.a.y) + (rotMat.b.y*rotMat.b.y));
+    output += (_pitch_ff_gain/(_TAS_state*_TAS_state)) * ((1.0f/cosPhi) + 1.0f);
+    
+    if (_last_t_p == 0 || dt > 1000) {
         dt = 0;
 
 		// if this PID hasn't been used for a full second then zero
 		// the intergator term. This prevents I buildup from a
 		// previous fight mode from causing a massive return before
 		// the integrator gets a chance to correct itself
-		_integrator_pid=0.0;
+		_integrator_pid_p = 0.0;
     }
-    _last_t = tnow;
+    _last_t_p = tnow;
 
     delta_time = (float)dt / 1000.0f;
-    float error = _height-_hgt_dem;
+    float error = _height-(_fxheight * 0.01f);
     
     // scale PID gains based on velocity
     if(_gain_scale == 1) {
@@ -1051,32 +965,109 @@ void AP_TECS::_update_pitch_pid(void)
    
     
     // Compute proportional component
+    output += (_pkp*error);
+
+    // Compute derivative component if time has elapsed
+    if ((fabsf(_pkd) > 0) && (dt > 0)) {
+        float derivative;
+
+		if (isnan(_last_derivative_p)) {
+			// we've just done a reset, suppress the first derivative
+			// term as we don't want a sudden change in input to cause
+			// a large D output change			
+			derivative = 0;
+			_last_derivative_p = 0;
+		} else {
+			derivative = (error - _last_error_p) / delta_time;
+		}
+
+        // discrete low pass filter, cuts out the
+        // high frequency noise that can drive the controller crazy
+        float RC = 1/(2*M_PI*_thz);
+        derivative = _last_derivative_p +
+                     ((delta_time / (RC + delta_time)) *
+                      (derivative - _last_derivative_p));
+
+        // update state
+        _last_error_p         = error;
+        _last_derivative_p    = derivative;
+
+        // add in derivative component
+        output += (_pkd * derivative);
+    }
+
+    // Compute integral component if time has elapsed
+    if ((fabsf(_pki) > 0) && (dt > 0)) {
+        _integrator_pid_p             += (error * _pki) * delta_time;
+        if (_integrator_pid_p < -_timax) {
+            _integrator_pid_p = -_timax;
+        } else if (_integrator_pid_p > _timax) {
+            _integrator_pid_p = _timax;
+        }
+        output                          += _integrator_pid_p;
+    }
+    
+    _pitch_dem = constrain_float(output, _PITCHminf, _PITCHmaxf);
+
+    _last_pitch_dem = _pitch_dem;
+ 
+}
+
+void AP_TECS::_update_throttle_pid(void)
+{
+    
+    uint32_t tnow = AP_HAL::millis();
+    uint32_t dt = tnow - _last_t_t;
+    float delta_time;
+    float output = 0.0;
+    
+    output += 10.736f * _TAS_state + 11.375f;
+    
+    if (_last_t_t == 0 || dt > 1000) {
+        dt = 0;
+
+		// if this PID hasn't been used for a full second then zero
+		// the intergator term. This prevents I buildup from a
+		// previous fight mode from causing a massive return before
+		// the integrator gets a chance to correct itself
+		_integrator_pid_t=0.0;
+    }
+    _last_t_t = tnow;
+
+    delta_time = (float)dt / 1000.0f;
+    float error = _TAS_state-_TAS_dem;
+    
+    _tkp = _tkp_0;
+    _tki = _tki_0;
+    _tkd = _tkd_0;
+    
+    // Compute proportional component
     output += (_tkp*error);
 
     // Compute derivative component if time has elapsed
     if ((fabsf(_tkd) > 0) && (dt > 0)) {
         float derivative;
 
-		if (isnan(_last_derivative)) {
+		if (isnan(_last_derivative_t)) {
 			// we've just done a reset, suppress the first derivative
 			// term as we don't want a sudden change in input to cause
 			// a large D output change			
 			derivative = 0;
-			_last_derivative = 0;
+			_last_derivative_t = 0;
 		} else {
-			derivative = (error - _last_error) / delta_time;
+			derivative = (error - _last_error_t) / delta_time;
 		}
 
         // discrete low pass filter, cuts out the
         // high frequency noise that can drive the controller crazy
         float RC = 1/(2*M_PI*_thz);
-        derivative = _last_derivative +
+        derivative = _last_derivative_t +
                      ((delta_time / (RC + delta_time)) *
-                      (derivative - _last_derivative));
+                      (derivative - _last_derivative_t));
 
         // update state
-        _last_error             = error;
-        _last_derivative    = derivative;
+        _last_error_t         = error;
+        _last_derivative_t    = derivative;
 
         // add in derivative component
         output += (_tkd * derivative);
@@ -1084,17 +1075,17 @@ void AP_TECS::_update_pitch_pid(void)
 
     // Compute integral component if time has elapsed
     if ((fabsf(_tki) > 0) && (dt > 0)) {
-        _integrator_pid             += (error * _tki) * delta_time;
-        if (_integrator_pid < -_timax) {
-            _integrator_pid = -_timax;
-        } else if (_integrator_pid > _timax) {
-            _integrator_pid = _timax;
+        _integrator_pid_t             += (error * _tki) * delta_time;
+        if (_integrator_pid_t < -_timax) {
+            _integrator_pid_t = -_timax;
+        } else if (_integrator_pid_t > _timax) {
+            _integrator_pid_t = _timax;
         }
-        output                          += _integrator_pid;
+        output                          += _integrator_pid_t;
     }
-    _pitch_dem = constrain_float(output, _PITCHminf, _PITCHmaxf);
+    _throttle_dem = constrain_float(output, _THRminf, _THRmaxf);
 
-    _last_pitch_dem = _pitch_dem;
+    _last_throttle_dem = _throttle_dem;
  
 }
 
@@ -1103,15 +1094,16 @@ void AP_TECS::_initialise_states(int32_t ptchMinCO_cd, float hgt_afe)
     // Initialise states and variables if DT > 1 second or in climbout
     if (_DT > 1.0f)
     {
-	_integrator_pid	     = 0.0f;
+	_integrator_pid_p	     = 0.0f;
+	_integrator_pid_t	     = 0.0f;
         _integTHR_state      = 0.0f;
         _integSEB_state      = 0.0f;
         _last_throttle_dem = aparm.throttle_cruise * 0.01f;
         _last_pitch_dem    = _ahrs.pitch;
-        _hgt_dem_adj_last  = hgt_afe;
-        _hgt_dem_adj       = _hgt_dem_adj_last;
-        _hgt_dem_prev      = _hgt_dem_adj_last;
-        _hgt_dem_in_old    = _hgt_dem_adj_last;
+        _hgt_dem_adj_last  = _fxheight * 0.01f;
+        _hgt_dem_adj       = _fxheight * 0.01f;
+        _hgt_dem_prev      = _fxheight * 0.01f;
+        _hgt_dem_in_old    = _fxheight * 0.01f;
         _TAS_dem_last      = _TAS_dem;
         _TAS_dem_adj       = _TAS_dem;
         _flags.underspeed        = false;
@@ -1123,9 +1115,9 @@ void AP_TECS::_initialise_states(int32_t ptchMinCO_cd, float hgt_afe)
     else if (_flight_stage == AP_Vehicle::FixedWing::FLIGHT_TAKEOFF || _flight_stage == AP_Vehicle::FixedWing::FLIGHT_ABORT_LAND)
     {
         _PITCHminf          = 0.000174533f * ptchMinCO_cd;
-        _hgt_dem_adj_last  = hgt_afe;
-        _hgt_dem_adj       = _hgt_dem_adj_last;
-        _hgt_dem_prev      = _hgt_dem_adj_last;
+        _hgt_dem_adj_last  = _fxheight * 0.01f;
+        _hgt_dem_adj       = _fxheight * 0.01f;
+        _hgt_dem_prev      = _fxheight * 0.01f;
         _TAS_dem_last      = _TAS_dem;
         _TAS_dem_adj       = _TAS_dem;
         _flags.underspeed        = false;
@@ -1165,8 +1157,8 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
     _distance_beyond_land_wp = distance_beyond_land_wp;
     _flight_stage = flight_stage;
 
-    // Convert inputsupdate_pitch_th
-    _hgt_dem = hgt_dem_cm * 0.01f;
+    // Convert inputs
+    _hgt_dem = _fxheight * 0.01f;
     _EAS_dem = EAS_dem_cm * 0.01f;
 
     // Update the speed estimate using a 2nd order complementary filter
@@ -1257,10 +1249,10 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
     _update_speed_demand();
 
     // Calculate the height demand
-    _update_height_demand();
+//    _update_height_demand();
 
     // Detect underspeed condition
-    _detect_underspeed();
+    //_detect_underspeed();
 
     // Calculate specific energy quantities
     _update_energies();
@@ -1270,7 +1262,10 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
     // Note that caller can demand the use of
     // synthetic airspeed for one loop if needed. This is required
     // during QuadPlane transition when pitch is constrained
-    if (((_ahrs.airspeed_sensor_enabled() || _use_synthetic_airspeed) && !_manual_throt_enable) || _use_synthetic_airspeed_once) {
+    if (_throttle_pid_enable >= 1.0) {
+        _update_throttle_pid();
+    }
+    else if (((_ahrs.airspeed_sensor_enabled() || _use_synthetic_airspeed) && !_manual_throt_enable) || _use_synthetic_airspeed_once) {
         _update_throttle_with_airspeed();
         _use_synthetic_airspeed_once = false;
     } else {
@@ -1278,10 +1273,10 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
     }
 
     // Detect bad descent due to demanded airspeed being too high
-    _detect_bad_descent();
+//    _detect_bad_descent();
 
     // Calculate pitch demand
-    if (_pid_enable >= 1.0) {_update_pitch_pid();}
+    if (_pitch_pid_enable >= 1.0) {_update_pitch_pid();}
     else {_update_pitch();}
 
     // log to DataFlash
@@ -1301,10 +1296,162 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
                                            (double)_TAS_rate_dem,
                                            (double)logging.SKE_weighting,
                                            _flags_byte);
-    DataFlash_Class::instance()->Log_Write("TEC2", "TimeUS,KErr,PErr,EDelta,LF", "Qffff",
+    DataFlash_Class::instance()->Log_Write("TEC2", "TimeUS,KErr,PErr,EDelta,LF,integ", "Qfffff",
                                            now,
                                            (double)logging.SKE_error,
                                            (double)logging.SPE_error,
                                            (double)logging.SEB_delta,
-                                           (double)load_factor);
+                                           (double)load_factor,
+                                           (double)_integrator_pid_p);
 }
+
+
+
+
+
+//// OLD JUNK ////
+// REMOVED FOR ARDUFOIL
+
+//void AP_TECS::_update_height_demand(void)
+//{
+//    /* This is being commented out for a fixed height demand
+//    // Apply 2 point moving average to demanded height
+//    _hgt_dem = 0.5f * (_hgt_dem + _hgt_dem_in_old);
+//    _hgt_dem_in_old = _hgt_dem;
+//
+//    float max_sink_rate = _maxSinkRate;
+//    if (_maxSinkRate_approach > 0 && _flags.is_doing_auto_land) {
+//        // special sink rate for approach to accommodate steep slopes and reverse thrust.
+//        // A special check must be done to see if we're LANDing on approach but also if
+//        // we're in that tiny window just starting NAV_LAND but still in NORMAL mode. If
+//        // we have a steep slope with a short approach we'll want to allow acquiring the
+//        // glide slope right away.
+//        max_sink_rate = _maxSinkRate_approach;
+//    }
+//
+//    // Limit height rate of change
+//    if ((_hgt_dem - _hgt_dem_prev) > (_maxClimbRate * 0.1f))
+//    {
+//        _hgt_dem = _hgt_dem_prev + _maxClimbRate * 0.1f;
+//    }
+//    else if ((_hgt_dem - _hgt_dem_prev) < (-max_sink_rate * 0.1f))
+//    {
+//        _hgt_dem = _hgt_dem_prev - max_sink_rate * 0.1f;
+//    }
+//    _hgt_dem_prev = _hgt_dem;
+//
+//    // Apply first order lag to height demand
+//    _hgt_dem_adj = 0.05f * _hgt_dem + 0.95f * _hgt_dem_adj_last;
+//
+//    // when flaring force height rate demand to the
+//    // configured sink rate and adjust the demanded height to
+//    // be kinematically consistent with the height rate.
+//    if (_landing.is_flaring()) {
+//        _integSEB_state = 0;
+//        if (_flare_counter == 0) {
+//            _hgt_rate_dem = _climb_rate;
+//            _land_hgt_dem = _hgt_dem_adj;
+//        }
+//
+//        // adjust the flare sink rate to increase/decrease as your travel further beyond the land wp
+//        float land_sink_rate_adj = _land_sink + _land_sink_rate_change*_distance_beyond_land_wp;
+//
+//        // bring it in over 1s to prevent overshoot
+//        if (_flare_counter < 10) {
+//            _hgt_rate_dem = _hgt_rate_dem * 0.8f - 0.2f * land_sink_rate_adj;
+//            _flare_counter++;
+//        } else {
+//            _hgt_rate_dem = - land_sink_rate_adj;
+//        }
+//        _land_hgt_dem += 0.1f * _hgt_rate_dem;
+//        _hgt_dem_adj = _land_hgt_dem;
+//    } else {
+//        _hgt_rate_dem = (_hgt_dem_adj - _hgt_dem_adj_last) / 0.1f;
+//        _flare_counter = 0;
+//    }
+//
+//    // for landing approach we will predict ahead by the time constant
+//    // plus the lag produced by the first order filter. This avoids a
+//    // lagged height demand while constantly descending which causes
+//    // us to consistently be above the desired glide slope. This will
+//    // be replaced with a better zero-lag filter in the future.
+//    float new_hgt_dem = _hgt_dem_adj;
+//    if (_flags.is_doing_auto_land) {
+//        if (hgt_dem_lag_filter_slew < 1) {
+//            hgt_dem_lag_filter_slew += 0.1f; // increment at 10Hz to gradually apply the compensation at first
+//        } else {
+//            hgt_dem_lag_filter_slew = 1;
+//        }
+//        new_hgt_dem += hgt_dem_lag_filter_slew*(_hgt_dem_adj - _hgt_dem_adj_last)*10.0f*(timeConstant()+1);
+//    } else {
+//        hgt_dem_lag_filter_slew = 0;
+//    }
+//    _hgt_dem_adj_last = _hgt_dem_adj;
+//    _hgt_dem_adj = new_hgt_dem;
+//	*/
+//    _hgt_dem_adj_last = _fxheight * 0.01f;
+//    _hgt_dem_adj = _fxheight * 0.01f;
+//}
+
+//void AP_TECS::_detect_underspeed(void)
+//{
+//    // see if we can clear a previous underspeed condition. We clear
+//    // it if we are now more than 15% above min speed, and haven't
+//    // been below min speed for at least 3 seconds.
+//    if (_flags.underspeed &&
+//        _TAS_state >= _TASmin * 1.15f &&
+//        AP_HAL::millis() - _underspeed_start_ms > 3000U) {
+//        _flags.underspeed = false;
+//    }
+//
+//    if (_flight_stage == AP_Vehicle::FixedWing::FLIGHT_VTOL) {
+//        _flags.underspeed = false;
+//    } else if (((_TAS_state < _TASmin * 0.9f) &&
+//            (_throttle_dem >= _THRmaxf * 0.95f) &&
+//            !_landing.is_flaring()) ||
+//            ((_height < _hgt_dem_adj) && _flags.underspeed))
+//    {
+//        _flags.underspeed = true;
+//        if (_TAS_state < _TASmin * 0.9f) {
+//            // reset start time as we are still underspeed
+//            _underspeed_start_ms = AP_HAL::millis();
+//        }
+//    }
+//    else
+//    {
+//        // this clears underspeed if we reach our demanded height and
+//        // we are either below 95% throttle or we above 90% of min
+//        // airspeed
+//        _flags.underspeed = false;
+//    }
+//}
+
+//void AP_TECS::_detect_bad_descent(void)
+//{
+//    // Detect a demanded airspeed too high for the aircraft to achieve. This will be
+//    // evident by the the following conditions:
+//    // 1) Underspeed protection not active
+//    // 2) Specific total energy error > 200 (greater than ~20m height error)
+//    // 3) Specific total energy reducing
+//    // 4) throttle demand > 90%
+//    // If these four conditions exist simultaneously, then the protection
+//    // mode will be activated.
+//    // Once active, the following condition are required to stay in the mode
+//    // 1) Underspeed protection not active
+//    // 2) Specific total energy error > 0
+//    // This mode will produce an undulating speed and height response as it cuts in and out but will prevent the aircraft from descending into the ground if an unachievable speed demand is set
+//    float STEdot = _SPEdot + _SKEdot;
+//    if ((!_flags.underspeed && (_STE_error > 200.0f) && (STEdot < 0.0f) && (_throttle_dem >= _THRmaxf * 0.9f)) || (_flags.badDescent && !_flags.underspeed && (_STE_error > 0.0f)))
+//    {
+//        _flags.badDescent = true;
+//    }
+//    else
+//    {
+//        _flags.badDescent = false;
+//    }
+//
+//    // when soaring is active we never trigger a bad descent
+//    if (_soaring_controller.is_active() && _soaring_controller.get_throttle_suppressed()) {
+//        _flags.badDescent = false;        
+//    }
+//}

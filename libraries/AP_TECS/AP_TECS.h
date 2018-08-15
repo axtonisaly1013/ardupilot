@@ -49,19 +49,14 @@ public:
 
     float get_fixed_height(void) {return _fxheight; }
 
-    float get_tecs_tkp(void) {return _tkp; }
-
-    float get_tecs_tki(void) {return _tki; }
-
-    float get_tecs_tkd(void) {return _tkd; }
-
-    float get_tecs_timax(void) {return _timax; }
-
     float get_tecs_thz(void) {return _thz; }
 
     float get_tecs_force(void) {return _force; }
+    
+    float get_alt_test(void) {return _alt_test;}
+    
+    float get_alt_test_2(void) {return _alt_test_2;}
 
-    float get_tecs_pid(void) {return _pid_enable; }
 
     // Update the control loop calculations
     void update_pitch_throttle(int32_t hgt_dem_cm,
@@ -189,17 +184,28 @@ private:
     AP_Float _maxSinkRate_approach;
     AP_Float _mxheight;
     AP_Float _fxheight;
+    AP_Float _pkp_0;
+    AP_Float _pki_0;
+    AP_Float _pkd_0;
     AP_Float _tkp_0;
     AP_Float _tki_0;
     AP_Float _tkd_0;
     AP_Float _timax;
     AP_Float _thz;
     AP_Float _force;
-    AP_Float _pid_enable;
+    AP_Float _pitch_pid_enable;
+    AP_Float _throttle_pid_enable;
     AP_Int8 _manual_throt_enable;
     AP_Int8 _gain_scale;
+    AP_Float _pitch_ff_gain;
+    AP_Float _alt_test;
+    AP_Float _alt_test_2;
+    AP_Int8 _test;
 
     // define variable for keeping track of proportional gain (changes every call of _update_pitch_pid)
+    float _pkp;
+    float _pki;
+    float _pkd;    
     float _tkp;
     float _tki;
     float _tkd;
@@ -245,11 +251,15 @@ private:
     // throttle demand rate limiter state
     float _last_throttle_dem;
 
-    float _last_t;
+    // record keeping for PID controllers
+    float _last_t_t;
+    float _last_t_p;
 
-    float _last_derivative;
+    float _last_derivative_t;
+    float _last_derivative_p;
 
-    float _last_error;
+    float _last_error_t;
+    float _last_error_p;
 
     // pitch demand rate limiter state
     float _last_pitch_dem;
@@ -340,7 +350,8 @@ private:
     float _SPEdot;
     float _SKEdot;
 
-    float _integrator_pid;
+    float _integrator_pid_p;
+    float _integrator_pid_t;
 
     // Specific energy error quantities
     float _STE_error;
@@ -379,10 +390,10 @@ private:
     void _update_speed_demand(void);
 
     // Update the demanded height
-    void _update_height_demand(void);
+//    void _update_height_demand(void);
 
     // Detect an underspeed condition
-    void _detect_underspeed(void);
+//    void _detect_underspeed(void);
 
     // Update Specific Energy Quantities
     void _update_energies(void);
@@ -397,13 +408,16 @@ private:
     float _get_i_gain(void);
 
     // Detect Bad Descent
-    void _detect_bad_descent(void);
+//    void _detect_bad_descent(void);
 
     // Update Demanded Pitch Angle using TECS
     void _update_pitch(void);
 
     // Update Demanded Pitch Angle using PID
     void _update_pitch_pid(void);
+    
+    // Update Demanded Throttle using PID
+    void _update_throttle_pid(void);
 
     // Initialise states and variables
     void _initialise_states(int32_t ptchMinCO_cd, float hgt_afe);

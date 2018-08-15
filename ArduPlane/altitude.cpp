@@ -31,28 +31,34 @@ void Plane::adjust_altitude_target()
         control_mode == CRUISE) {
         return;
     }
-    if (landing.is_flaring()) {
-        // during a landing flare, use TECS_LAND_SINK as a target sink
-        // rate, and ignores the target altitude
-        set_target_altitude_location(next_WP_loc);
-    } else if (landing.is_on_approach()) {
-        landing.setup_landing_glide_slope(prev_WP_loc, next_WP_loc, current_loc, target_altitude.offset_cm);
-        landing.adjust_landing_slope_for_rangefinder_bump(rangefinder_state, prev_WP_loc, next_WP_loc, current_loc, auto_state.wp_distance, target_altitude.offset_cm);
-    } else if (landing.get_target_altitude_location(target_location)) {
-       set_target_altitude_location(target_location);
-    } else if (reached_loiter_target()) {
-        // once we reach a loiter target then lock to the final
-        // altitude target
-        set_target_altitude_location(next_WP_loc);
-    } else if (target_altitude.offset_cm != 0 && 
-               !location_passed_point(current_loc, prev_WP_loc, next_WP_loc)) {
-        // control climb/descent rate
-        set_target_altitude_proportion(next_WP_loc, 1.0f-auto_state.wp_proportion);
-
-        // stay within the range of the start and end locations in altitude
-        constrain_target_altitude_location(next_WP_loc, prev_WP_loc);
-    } else {
-        set_target_altitude_location(next_WP_loc);
+    else if(SpdHgt_Controller->get_alt_test() >= 1.0f)
+    {
+        set_target_altitude_preset();
+    }
+    else {
+        if (landing.is_flaring()) {
+            // during a landing flare, use TECS_LAND_SINK as a target sink
+            // rate, and ignores the target altitude
+            set_target_altitude_location(next_WP_loc);
+        } else if (landing.is_on_approach()) {
+            landing.setup_landing_glide_slope(prev_WP_loc, next_WP_loc, current_loc, target_altitude.offset_cm);
+            landing.adjust_landing_slope_for_rangefinder_bump(rangefinder_state, prev_WP_loc, next_WP_loc, current_loc, auto_state.wp_distance, target_altitude.offset_cm);
+        } else if (landing.get_target_altitude_location(target_location)) {
+           set_target_altitude_location(target_location);
+        } else if (reached_loiter_target()) {
+            // once we reach a loiter target then lock to the final
+            // altitude target
+            set_target_altitude_location(next_WP_loc);
+        } else if (target_altitude.offset_cm != 0 && 
+                   !location_passed_point(current_loc, prev_WP_loc, next_WP_loc)) {
+            // control climb/descent rate
+            set_target_altitude_proportion(next_WP_loc, 1.0f-auto_state.wp_proportion);
+    
+            // stay within the range of the start and end locations in altitude
+            constrain_target_altitude_location(next_WP_loc, prev_WP_loc);
+        } else {
+            set_target_altitude_location(next_WP_loc);
+        }
     }
 
     altitude_error_cm = calc_altitude_error_cm();
@@ -152,6 +158,11 @@ float Plane::relative_ground_altitude(bool use_rangefinder_if_available)
  */
 void Plane::set_target_altitude_current(void)
 {
+    if(SpdHgt_Controller->get_alt_test_2() >= 1.0f)
+        {
+            set_target_altitude_preset();
+            return;
+        }
     // record altitude above sea level at the current time as our
     // target altitude
     target_altitude.amsl_cm =dist_above_water;
@@ -181,6 +192,11 @@ void Plane::set_target_altitude_current(void)
  */
 void Plane::set_target_altitude_current_water(void)
 {
+    if(SpdHgt_Controller->get_alt_test_2() >= 1.0f)
+        {
+            set_target_altitude_preset();
+            return;
+        }
     // record altitude above sea level at the current time as our
     // target altitude
     target_altitude.amsl_cm = dist_above_water;
@@ -206,6 +222,11 @@ void Plane::set_target_altitude_current_adjusted(void)
  */
 void Plane::set_target_altitude_location(const Location &loc)
 {
+    if(SpdHgt_Controller->get_alt_test() >= 1.0f)
+        {
+            set_target_altitude_preset();
+            return;
+        }
     target_altitude.amsl_cm = dist_above_water;
 
 }

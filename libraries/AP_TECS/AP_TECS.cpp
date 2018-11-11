@@ -110,29 +110,29 @@ const AP_Param::GroupInfo AP_TECS::var_info[] = {
     // @User: User
     AP_GROUPINFO("SINK_MAX",  11, AP_TECS, _maxSinkRate, 5.0f),
 
-    // @Param: LAND_ARSPD
-    // @DisplayName: Airspeed during landing approach (m/s)
-    // @Description: When performing an autonomus landing, this value is used as the goal airspeed during approach.  Note that this parameter is not useful if your platform does not have an airspeed sensor (use TECS_LAND_THR instead).  If negative then this value is not used during landing.
-    // @Range: -1 127
-    // @Increment: 1
-    // @User: User
-    AP_GROUPINFO("LAND_ARSPD", 12, AP_TECS, _landAirspeed, -1),
+//    // @Param: LAND_ARSPD
+//    // @DisplayName: Airspeed during landing approach (m/s)
+//    // @Description: When performing an autonomus landing, this value is used as the goal airspeed during approach.  Note that this parameter is not useful if your platform does not have an airspeed sensor (use TECS_LAND_THR instead).  If negative then this value is not used during landing.
+//    // @Range: -1 127
+//    // @Increment: 1
+//    // @User: User
+//    AP_GROUPINFO("LAND_ARSPD", 12, AP_TECS, _landAirspeed, -1),
 
-    // @Param: LAND_THR
-    // @DisplayName: Cruise throttle during landing approach (percentage)
-    // @Description: Use this parameter instead of LAND_ARSPD if your platform does not have an airspeed sensor.  It is the cruise throttle during landing approach.  If this value is negative then it is disabled and TECS_LAND_ARSPD is used instead.
-    // @Range: -1 100
-    // @Increment: 0.1
-    // @User: User
-    AP_GROUPINFO("LAND_THR", 13, AP_TECS, _landThrottle, -1),
+//    // @Param: LAND_THR
+//    // @DisplayName: Cruise throttle during landing approach (percentage)
+//    // @Description: Use this parameter instead of LAND_ARSPD if your platform does not have an airspeed sensor.  It is the cruise throttle during landing approach.  If this value is negative then it is disabled and TECS_LAND_ARSPD is used instead.
+//    // @Range: -1 100
+//    // @Increment: 0.1
+//    // @User: User
+//    AP_GROUPINFO("LAND_THR", 13, AP_TECS, _landThrottle, -1),
 
-    // @Param: LAND_SPDWGT
-    // @DisplayName: Weighting applied to speed control during landing.
-    // @Description: Same as SPDWEIGHT parameter, with the exception that this parameter is applied during landing flight stages.  A value closer to 2 will result in the plane ignoring height error during landing and our experience has been that the plane will therefore keep the nose up -- sometimes good for a glider landing (with the side effect that you will likely glide a ways past the landing point).  A value closer to 0 results in the plane ignoring speed error -- use caution when lowering the value below 1 -- ignoring speed could result in a stall. Values between 0 and 2 are valid values for a fixed landing weight. When using -1 the weight will be scaled during the landing. At the start of the landing approach it starts with TECS_SPDWEIGHT and scales down to 0 by the time you reach the land point. Example: Halfway down the landing approach you'll effectively have a weight of TECS_SPDWEIGHT/2.
-    // @Range: -1.0 2.0
-    // @Increment: 0.1
-    // @User: Advanced
-    AP_GROUPINFO("LAND_SPDWGT", 14, AP_TECS, _spdWeightLand, -1.0f),
+//    // @Param: LAND_SPDWGT
+//    // @DisplayName: Weighting applied to speed control during landing.
+//    // @Description: Same as SPDWEIGHT parameter, with the exception that this parameter is applied during landing flight stages.  A value closer to 2 will result in the plane ignoring height error during landing and our experience has been that the plane will therefore keep the nose up -- sometimes good for a glider landing (with the side effect that you will likely glide a ways past the landing point).  A value closer to 0 results in the plane ignoring speed error -- use caution when lowering the value below 1 -- ignoring speed could result in a stall. Values between 0 and 2 are valid values for a fixed landing weight. When using -1 the weight will be scaled during the landing. At the start of the landing approach it starts with TECS_SPDWEIGHT and scales down to 0 by the time you reach the land point. Example: Halfway down the landing approach you'll effectively have a weight of TECS_SPDWEIGHT/2.
+//    // @Range: -1.0 2.0
+//    // @Increment: 0.1
+//    // @User: Advanced
+//    AP_GROUPINFO("LAND_SPDWGT", 14, AP_TECS, _spdWeightLand, -1.0f),
 
     // @Param: PITCH_MAX
     // @DisplayName: Maximum pitch in auto flight
@@ -150,87 +150,87 @@ const AP_Param::GroupInfo AP_TECS::var_info[] = {
     // @User: Advanced
     AP_GROUPINFO("PITCH_MIN", 16, AP_TECS, _pitch_min, 0),
 
-    // @Param: LAND_SINK
-    // @DisplayName: Sink rate for final landing stage
-    // @Description: The sink rate in meters/second for the final stage of landing.
-    // @Range: 0.0 2.0
-    // @Increment: 0.1
-    // @User: Advanced
-    AP_GROUPINFO("LAND_SINK", 17, AP_TECS, _land_sink, 0.25f),
+//    // @Param: LAND_SINK
+//    // @DisplayName: Sink rate for final landing stage
+//    // @Description: The sink rate in meters/second for the final stage of landing.
+//    // @Range: 0.0 2.0
+//    // @Increment: 0.1
+//    // @User: Advanced
+//    AP_GROUPINFO("LAND_SINK", 17, AP_TECS, _land_sink, 0.25f),
 
-    // @Param: LAND_TCONST
-    // @DisplayName: Land controller time constant (sec)
-    // @Description: This is the time constant of the TECS control algorithm when in final landing stage of flight. It should be smaller than TECS_TIME_CONST to allow for faster flare
-    // @Range: 1.0 5.0
-    // @Increment: 0.2
-    // @User: Advanced
-    AP_GROUPINFO("LAND_TCONST", 18, AP_TECS, _landTimeConst, 2.0f),
+//    // @Param: LAND_TCONST
+//    // @DisplayName: Land controller time constant (sec)
+//    // @Description: This is the time constant of the TECS control algorithm when in final landing stage of flight. It should be smaller than TECS_TIME_CONST to allow for faster flare
+//    // @Range: 1.0 5.0
+//    // @Increment: 0.2
+//    // @User: Advanced
+//    AP_GROUPINFO("LAND_TCONST", 18, AP_TECS, _landTimeConst, 2.0f),
 
-    // @Param: LAND_DAMP
-    // @DisplayName: Controller sink rate to pitch gain during flare
-    // @Description: This is the sink rate gain for the pitch demand loop when in final landing stage of flight. It should be larger than TECS_PTCH_DAMP to allow for better sink rate control during flare.
-    // @Range: 0.1 1.0
-    // @Increment: 0.1
-    // @User: Advanced
-    AP_GROUPINFO("LAND_DAMP", 19, AP_TECS, _landDamp, 0.5f),
+//    // @Param: LAND_DAMP
+//    // @DisplayName: Controller sink rate to pitch gain during flare
+//    // @Description: This is the sink rate gain for the pitch demand loop when in final landing stage of flight. It should be larger than TECS_PTCH_DAMP to allow for better sink rate control during flare.
+//    // @Range: 0.1 1.0
+//    // @Increment: 0.1
+//    // @User: Advanced
+//    AP_GROUPINFO("LAND_DAMP", 19, AP_TECS, _landDamp, 0.5f),
 
-    // @Param: LAND_PMAX
-    // @DisplayName: Maximum pitch during final stage of landing
-    // @Description: This limits the pitch used during the final stage of automatic landing. During the final landing stage most planes need to keep their pitch small to avoid stalling. A maximum of 10 degrees is usually good. A value of zero means to use the normal pitch limits.
-    // @Range: -5 40
-    // @Increment: 1
-    // @User: Advanced
-    AP_GROUPINFO("LAND_PMAX", 20, AP_TECS, _land_pitch_max, 10),
+//    // @Param: LAND_PMAX
+//    // @DisplayName: Maximum pitch during final stage of landing
+//    // @Description: This limits the pitch used during the final stage of automatic landing. During the final landing stage most planes need to keep their pitch small to avoid stalling. A maximum of 10 degrees is usually good. A value of zero means to use the normal pitch limits.
+//    // @Range: -5 40
+//    // @Increment: 1
+//    // @User: Advanced
+//    AP_GROUPINFO("LAND_PMAX", 20, AP_TECS, _land_pitch_max, 10),
 
-    // @Param: APPR_SMAX
-    // @DisplayName: Sink rate max for landing approach stage
-    // @Description: The sink rate max for the landing approach stage of landing. This will need to be large for steep landing approaches especially when using reverse thrust. If 0, then use TECS_SINK_MAX.
-    // @Range: 0.0 20.0
-    // @Units: m/s
-    // @Increment: 0.1
-    // @User: Advanced
-    AP_GROUPINFO("APPR_SMAX", 21, AP_TECS, _maxSinkRate_approach, 0),
+//    // @Param: APPR_SMAX
+//    // @DisplayName: Sink rate max for landing approach stage
+//    // @Description: The sink rate max for the landing approach stage of landing. This will need to be large for steep landing approaches especially when using reverse thrust. If 0, then use TECS_SINK_MAX.
+//    // @Range: 0.0 20.0
+//    // @Units: m/s
+//    // @Increment: 0.1
+//    // @User: Advanced
+//    AP_GROUPINFO("APPR_SMAX", 21, AP_TECS, _maxSinkRate_approach, 0),
 
-    // @Param: LAND_SRC
-    // @DisplayName: Land sink rate change
-    // @Description: When zero, the flare sink rate (TECS_LAND_SINK) is a fixed sink demand. With this enabled the flare sinkrate will increase/decrease the flare sink demand as you get further beyond the LAND waypoint. Has no effect before the waypoint. This value is added to TECS_LAND_SINK proportional to distance traveled after wp. With an increasing sink rate you can still land in a given distance if you're traveling too fast and cruise passed the land point. A positive value will force the plane to land sooner proportional to distance passed land point. A negative number will tell the plane to slowly climb allowing for a pitched-up stall landing. Recommend 0.2 as initial value.
-    // @Range: -2.0 2.0
-    // @Units: m/s/m
-    // @Increment: 0.1
-    // @User: Advanced
-    AP_GROUPINFO("LAND_SRC", 22, AP_TECS, _land_sink_rate_change, 0),
+//    // @Param: LAND_SRC
+//    // @DisplayName: Land sink rate change
+//    // @Description: When zero, the flare sink rate (TECS_LAND_SINK) is a fixed sink demand. With this enabled the flare sinkrate will increase/decrease the flare sink demand as you get further beyond the LAND waypoint. Has no effect before the waypoint. This value is added to TECS_LAND_SINK proportional to distance traveled after wp. With an increasing sink rate you can still land in a given distance if you're traveling too fast and cruise passed the land point. A positive value will force the plane to land sooner proportional to distance passed land point. A negative number will tell the plane to slowly climb allowing for a pitched-up stall landing. Recommend 0.2 as initial value.
+//    // @Range: -2.0 2.0
+//    // @Units: m/s/m
+//    // @Increment: 0.1
+//    // @User: Advanced
+//    AP_GROUPINFO("LAND_SRC", 22, AP_TECS, _land_sink_rate_change, 0),
 
-    // @Param: LAND_TDAMP
-    // @DisplayName: Controller throttle damping when landing
-    // @Description: This is the damping gain for the throttle demand loop during and auto-landing. Same as TECS_THR_DAMP but only in effect during an auto-land. Increase to add damping to correct for oscillations in speed and height. When set to 0 landing throttle damp is controlled by TECS_THR_DAMP.
-    // @Range: 0.1 1.0
-    // @Increment: 0.1
-    // @User: Advanced
-    AP_GROUPINFO("LAND_TDAMP", 23, AP_TECS, _land_throttle_damp, 0),
+//    // @Param: LAND_TDAMP
+//    // @DisplayName: Controller throttle damping when landing
+//    // @Description: This is the damping gain for the throttle demand loop during and auto-landing. Same as TECS_THR_DAMP but only in effect during an auto-land. Increase to add damping to correct for oscillations in speed and height. When set to 0 landing throttle damp is controlled by TECS_THR_DAMP.
+//    // @Range: 0.1 1.0
+//    // @Increment: 0.1
+//    // @User: Advanced
+//    AP_GROUPINFO("LAND_TDAMP", 23, AP_TECS, _land_throttle_damp, 0),
 
-    // @Param: LAND_IGAIN
-    // @DisplayName: Controller integrator during landing
-    // @Description: This is the integrator gain on the control loop during landing. When set to 0 then TECS_INTEG_GAIN is used. Increase to increase the rate at which speed and height offsets are trimmed out. Typically values lower than TECS_INTEG_GAIN work best
-    // @Range: 0.0 0.5
-    // @Increment: 0.02
-    // @User: Advanced
-    AP_GROUPINFO("LAND_IGAIN", 24, AP_TECS, _integGain_land, 0),
+//    // @Param: LAND_IGAIN
+//    // @DisplayName: Controller integrator during landing
+//    // @Description: This is the integrator gain on the control loop during landing. When set to 0 then TECS_INTEG_GAIN is used. Increase to increase the rate at which speed and height offsets are trimmed out. Typically values lower than TECS_INTEG_GAIN work best
+//    // @Range: 0.0 0.5
+//    // @Increment: 0.02
+//    // @User: Advanced
+//    AP_GROUPINFO("LAND_IGAIN", 24, AP_TECS, _integGain_land, 0),
 
-    // @Param: TKOFF_IGAIN
-    // @DisplayName: Controller integrator during takeoff
-    // @Description: This is the integrator gain on the control loop during takeoff. When set to 0 then TECS_INTEG_GAIN is used. Increase to increase the rate at which speed and height offsets are trimmed out. Typically values higher than TECS_INTEG_GAIN work best
-    // @Range: 0.0 0.5
-    // @Increment: 0.02
-    // @User: Advanced
-    AP_GROUPINFO("TKOFF_IGAIN", 25, AP_TECS, _integGain_takeoff, 0),
+//    // @Param: TKOFF_IGAIN
+//    // @DisplayName: Controller integrator during takeoff
+//    // @Description: This is the integrator gain on the control loop during takeoff. When set to 0 then TECS_INTEG_GAIN is used. Increase to increase the rate at which speed and height offsets are trimmed out. Typically values higher than TECS_INTEG_GAIN work best
+//    // @Range: 0.0 0.5
+//    // @Increment: 0.02
+//    // @User: Advanced
+//    AP_GROUPINFO("TKOFF_IGAIN", 25, AP_TECS, _integGain_takeoff, 0),
 
-    // @Param: LAND_PDAMP
-    // @DisplayName: Pitch damping gain when landing
-    // @Description: This is the damping gain for the pitch demand loop during landing. Increase to add damping  to correct for oscillations in speed and height. If set to 0 then TECS_PTCH_DAMP will be used instead.
-    // @Range: 0.1 1.0
-    // @Increment: 0.1
-    // @User: Advanced
-    AP_GROUPINFO("LAND_PDAMP", 26, AP_TECS, _land_pitch_damp, 0),
+//    // @Param: LAND_PDAMP
+//    // @DisplayName: Pitch damping gain when landing
+//    // @Description: This is the damping gain for the pitch demand loop during landing. Increase to add damping  to correct for oscillations in speed and height. If set to 0 then TECS_PTCH_DAMP will be used instead.
+//    // @Range: 0.1 1.0
+//    // @Increment: 0.1
+//    // @User: Advanced
+//    AP_GROUPINFO("LAND_PDAMP", 26, AP_TECS, _land_pitch_damp, 0),
 
     // @Param: SYNAIRSPEED
     // @DisplayName: Enable the use of synthetic airspeed
@@ -289,7 +289,7 @@ const AP_Param::GroupInfo AP_TECS::var_info[] = {
     AP_GROUPINFO("D_HZ", 34, AP_TECS, _thz, 20),
 
     // @Param: FRCE
-    // @DisplayName: Force TECS to run in many situation which it normally would not
+    // @DisplayName: Force TECS to run in many situations which it normally would not
     // @Description: ...
     // @Values: 0:Disable,1:Force
     // @User: Advanced
@@ -308,14 +308,7 @@ const AP_Param::GroupInfo AP_TECS::var_info[] = {
     // @Values: 0:Disable,1:Enable
     // @User: Advanced
     AP_GROUPINFO("THT_FRCE", 37, AP_TECS, _manual_throt_enable, 0),
-    
-    // @Param: GAIN_SCALE
-    // @DisplayName: Scale PID Gains based on velocity
-    // @Description: P, I, and D terms for height controller scale like: K0/v^2
-    // @Values: 0:Disable,1:Enable
-    // @User: Advanced
-    AP_GROUPINFO("GAIN_SCALE", 38, AP_TECS, _gain_scale, 0),    
-       
+           
     // @Param: PCH_FFGN
     // @DisplayName: Feedforward trim pitch values for level flight
     // @Description: Gain for feedforward control
@@ -354,25 +347,68 @@ const AP_Param::GroupInfo AP_TECS::var_info[] = {
     // @Param: ALT_TEST
     // @DisplayName: Test to check possible method of maintaining tracking of TECS_FIX_HEIGHT during waypoint navigation
     // @Description: ...
-    // @Values: 0: regular function, 1: Enable test
+    // @Values: 0: regular function, 1: Enable test, 2: enable second test
     // @User: Advanced
-    AP_GROUPINFO("ALT_TEST", 44, AP_TECS, _alt_test, 0),
-    
-    // @Param: ALT_TEST_2
-    // @DisplayName: Testing effect of changing 'set_target_altitude_current' method
-    // @Description: ...
-    // @Values: 0: regular function, 1: Enable test
-    // @User: Advanced
-    AP_GROUPINFO("ALT_TEST_2", 45, AP_TECS, _alt_test_2, 0),
+    AP_GROUPINFO("ALT_TEST", 44, AP_TECS, _alt_test, 0.0f),
     
     // @Param: TEST
     // @DisplayName: Testing changes in stock TECS algorithm (feedforward & potential energy disabled)
     // @Description: ...
     // @Values: 0: regular function, 1: Enable test
     // @User: Advanced
-    AP_GROUPINFO("TEST", 46, AP_TECS, _test, 0),
+    AP_GROUPINFO("TEST", 45, AP_TECS, _test, 0),
 
-        
+    // @Param: PCHRLL_FF
+    // @DisplayName: Gain to enable use of loading factor to increase angle of attack during turns
+    // @Description: ...
+    // @Values: ...
+    // @User: Advanced
+    AP_GROUPINFO("PCHRLL_FF", 38, AP_TECS, _pchrll_ff_gain, 0.0f),
+    
+    // @Param: BNKDSB_PID
+    // @DisplayName: Disable aspects of PID controller at a set bank angle
+    // @Description: Set which terms to disable at angle specified by 'BNKDSB_ANG'
+    // @Values: 0: PID runs, 1: P term disabled, 2: PD diabled, 3: PID disabled
+    // @User: Advanced
+    AP_GROUPINFO("BNK_PIDDSB", 12, AP_TECS, _bank_pid_disable, 0),
+    
+    // @Param: BNKDSB_ANG
+    // @DisplayName: Disable aspects of PID controller at a set bank angle
+    // @Description: Set bank angle at which terms specified by 'BNKDSB_PID' shut off
+    // @Values: 0-90 deg; setting to 0 or negative value will disable
+    // @User: Advanced
+    AP_GROUPINFO("BNK_PIDDSB", 13, AP_TECS, _bank_disable_angle, 0.0f),
+    
+    // @Param: TKOFF_SPD
+    // @DisplayName: Speed at which takeoff controller pitches up
+    // @Description: ...
+    // @Values: UNITS ARE m/s ~ 2-3 m/s for hydrofoil
+    // @User: Advanced
+    AP_GROUPINFO("TKOFF_SPD", 14, AP_TECS, _takeoff_speed, 3.0f),
+    
+    // @Param: TKOFF_PTCH
+    // @DisplayName: Pitch angle for takeoff rise
+    // @Description: Constant angle commanded until desired height is reached
+    // @Values: UNITS ARE DEG ~ 8deg for hydrofoil
+    // @User: Advanced
+    AP_GROUPINFO("TKOFF_PTCH", 17, AP_TECS, _takeoff_pitch, 8.0f),
+    
+    // @Param: TKOFF_WDW
+    // @DisplayName: Percentage of 'FIX_HEIGHT' at which takeoff is complete
+    // @Description: ...
+    // @Values: Enter a fraction above 1.0; eg. 1.15 completes takeoff at 15% lower than 'FIX_HEIGHT'
+    // @User: Advanced
+    AP_GROUPINFO("TKOFF_WDW", 18, AP_TECS, _takeoff_window, 1.15f),
+    
+    // @Param: TKOFF_THT
+    // @DisplayName: Constant throttle demand while taking off
+    // @Description: ...
+    // @Values: 0-1
+    // @User: Advanced
+    AP_GROUPINFO("TKOFF_THT", 19, AP_TECS, _takeoff_throttle, 0.75f),
+    
+    
+    //FREE SLOTS: 20 21 22 23 24 25 26    
     AP_GROUPEND
 };
 
@@ -394,14 +430,14 @@ void AP_TECS::update_50hz(void)
       if we have a vertical position estimate from the EKF then use
       it, otherwise use barometric altitude
      */
-    _ahrs.get_relative_position_D_home(_height);
-    _height *= -1.0f;
+    _ahrs.get_relative_position_D_home(logging.height_log);
+    logging.height_log *= -1.0f;
 
     // Calculate time in seconds since last update
     uint64_t now = AP_HAL::micros64();
     float DT = (now - _update_50hz_last_usec) * 1.0e-6f;
     if (DT > 1.0f) {
-        _climb_rate = 0.0f;
+        logging.hd_log = 0.0f;
         _height_filter.dd_height = 0.0f;
         DT            = 0.02f; // when first starting TECS, use a
         // small time constant
@@ -412,13 +448,13 @@ void AP_TECS::update_50hz(void)
     Vector3f velned;
     if (_ahrs.get_velocity_NED(velned)) {
         // if possible use the EKF vertical velocity
-        _climb_rate = -velned.z;
+        logging.hd_log = -velned.z;
     } else {
         /*
           use a complimentary filter to calculate climb_rate. This is
           designed to minimise lag
          */
-        float baro_alt = _ahrs.get_baro().get_altitude();
+        float baro_alt = _height;
         // Get height acceleration
         float hgt_ddot_mea = -(_ahrs.get_accel_ef().z + GRAVITY_MSS);
         // Perform filter calculation using backwards Euler integration
@@ -431,13 +467,13 @@ void AP_TECS::update_50hz(void)
 
         float integ2_input = _height_filter.dd_height + hgt_ddot_mea + hgt_err * omega2 * 3.0f;
 
-        _climb_rate += integ2_input * DT;
+        logging.hd_log += integ2_input * DT;
 
-        float integ3_input = _climb_rate + hgt_err * _hgtCompFiltOmega * 3.0f;
+        float integ3_input = logging.hd_log + hgt_err * _hgtCompFiltOmega * 3.0f;
         // If more than 1 second has elapsed since last update then reset the integrator state
         // to the measured height
         if (DT > 1.0f) {
-            _height_filter.height = _height;
+            _height_filter.height = logging.height_log;
         } else {
             _height_filter.height += integ3_input*DT;
         }
@@ -455,13 +491,7 @@ void AP_TECS::update_50hz(void)
 
 void AP_TECS::update_50hz(float vz, float pz)
 {
-    // Implement third order complementary filter for height and height rate
-    // estimated height rate = _climb_rate
-    // estimated height above field elevation  = _height
-    // Reference Paper :
-    // Optimizing the Gains of the Baro-Inertial Vertical Channel
-    // Widnall W.S, Sinha P.K,
-    // AIAA Journal of Guidance and Control, 78-1307R
+    // implement Kalman filter to estimate height above water and climb rate
 
     /*
       if we have a vertical position estimate from the EKF then use
@@ -621,12 +651,12 @@ void AP_TECS::_update_energies(void)
  */
 float AP_TECS::timeConstant(void) const
 {
-    if (_flags.is_doing_auto_land) {
-        if (_landTimeConst < 0.1f) {
-            return 0.1f;
-        }
-        return _landTimeConst;
-    }
+//    if (_flags.is_doing_auto_land) {
+//        if (_landTimeConst < 0.1f) {
+//            return 0.1f;
+//        }
+//        return _landTimeConst;
+//    }
     if (_timeConst < 0.1f) {
         return 0.1f;
     }
@@ -688,16 +718,16 @@ void AP_TECS::_update_throttle_with_airspeed(void)
         float cosPhi = sqrtf((rotMat.a.y*rotMat.a.y) + (rotMat.b.y*rotMat.b.y));
         STEdot_dem = STEdot_dem + _rollComp * (1.0f/constrain_float(cosPhi * cosPhi , 0.1f, 1.0f) - 1.0f);
         if(_test == 1) {
-            ff_throttle = 10.763 * _TAS_state + 11.375; 
+            ff_throttle = 0.1074f * _TAS_state + 0.114f; 
         }
         else {
             ff_throttle = nomThr + STEdot_dem / (_STEdot_max - _STEdot_min) * (_THRmaxf - _THRminf);
         }
         // Calculate PD + FF throttle
         float throttle_damp = _thrDamp;
-        if (_flags.is_doing_auto_land && !is_zero(_land_throttle_damp)) {
-            throttle_damp = _land_throttle_damp;
-        }
+//        if (_flags.is_doing_auto_land && !is_zero(_land_throttle_damp)) {
+//            throttle_damp = _land_throttle_damp;
+//        }
         _throttle_dem = (_STE_error + STEdot_error * throttle_damp) * K_STE2Thr + ff_throttle;
 
         // Constrain throttle demand
@@ -749,17 +779,17 @@ void AP_TECS::_update_throttle_with_airspeed(void)
 
 float AP_TECS::_get_i_gain(void)
 {
-    float i_gain = _integGain;
-    if (_flight_stage == AP_Vehicle::FixedWing::FLIGHT_TAKEOFF || _flight_stage == AP_Vehicle::FixedWing::FLIGHT_ABORT_LAND) {
-        if (!is_zero(_integGain_takeoff)) {
-            i_gain = _integGain_takeoff;
-        }
-    } else if (_flags.is_doing_auto_land) {
-        if (!is_zero(_integGain_land)) {
-            i_gain = _integGain_land;
-        }
-    }
-    return i_gain;
+//    float i_gain = _integGain;
+//    if (_flight_stage == AP_Vehicle::FixedWing::FLIGHT_TAKEOFF || _flight_stage == AP_Vehicle::FixedWing::FLIGHT_ABORT_LAND) {
+//        if (!is_zero(_integGain_takeoff)) {
+//            i_gain = _integGain_takeoff;
+//        }
+//    } //else if (_flags.is_doing_auto_land) {
+//        if (!is_zero(_integGain_land)) {
+//            i_gain = _integGain_land;
+//        }
+//    }
+    return _integGain;
 }
 
 /*
@@ -769,13 +799,11 @@ void AP_TECS::_update_throttle_without_airspeed(int16_t throttle_nudge)
 {
     // Calculate throttle demand by interpolating between pitch and throttle limits
     float nomThr;
-    //If landing and we don't have an airspeed sensor and we have a non-zero
-    //TECS_LAND_THR param then use it
-    if (_flags.is_doing_auto_land && _landThrottle >= 0) {
-        nomThr = (_landThrottle + throttle_nudge) * 0.01f;
-    } else { //not landing or not using TECS_LAND_THR parameter
-        nomThr = throttle_nudge * 0.01f;
-    }
+    nomThr = throttle_nudge * 0.01f;
+
+//    if (_flags.is_doing_auto_land && _landThrottle >= 0) {
+//        nomThr = (_landThrottle + throttle_nudge) * 0.01f;
+
 /*	Bypassed for constant throttle
     if (_pitch_dem > 0.0f && _PITCHmaxf > 0.0f)
     {
@@ -821,15 +849,15 @@ void AP_TECS::_update_pitch(void)
         SKE_weighting = 0.0f;        
     } else if ( _flags.underspeed || _flight_stage == AP_Vehicle::FixedWing::FLIGHT_TAKEOFF || _flight_stage == AP_Vehicle::FixedWing::FLIGHT_ABORT_LAND) {
         SKE_weighting = 2.0f;
-    } else if (_flags.is_doing_auto_land) {
-        if (_spdWeightLand < 0) {
-            // use sliding scale from normal weight down to zero at landing
-            float scaled_weight = _spdWeight * (1.0f - constrain_float(_path_proportion,0,1));
-            SKE_weighting = constrain_float(scaled_weight, 0.0f, 2.0f);
-        } else {
-            SKE_weighting = constrain_float(_spdWeightLand, 0.0f, 2.0f);
-        }
-    }
+    } //else if (_flags.is_doing_auto_land) {
+       //        if (_spdWeightLand < 0) {
+       //            // use sliding scale from normal weight down to zero at landing
+       //            float scaled_weight = _spdWeight * (1.0f - constrain_float(_path_proportion,0,1));
+       //            SKE_weighting = constrain_float(scaled_weight, 0.0f, 2.0f);
+       //        } else {
+       //            SKE_weighting = constrain_float(_spdWeightLand, 0.0f, 2.0f);
+       //        }
+       //    }
 
     logging.SKE_weighting = SKE_weighting;
     
@@ -876,11 +904,11 @@ void AP_TECS::_update_pitch(void)
     float temp = SEB_error + SEBdot_dem * timeConstant();
 
     float pitch_damp = _ptchDamp;
-    if (_landing.is_flaring()) {
-        pitch_damp = _landDamp;
-    } else if (!is_zero(_land_pitch_damp) && _flags.is_doing_auto_land) {
-        pitch_damp = _land_pitch_damp;
-    }
+//    if (_landing.is_flaring()) {
+//        pitch_damp = _landDamp;
+//    } else if (!is_zero(_land_pitch_damp) && _flags.is_doing_auto_land) {
+//        pitch_damp = _land_pitch_damp;
+//    }
     temp += SEBdot_error * pitch_damp;
 
     if (_flight_stage == AP_Vehicle::FixedWing::FLIGHT_TAKEOFF || _flight_stage == AP_Vehicle::FixedWing::FLIGHT_ABORT_LAND) {
@@ -925,6 +953,27 @@ void AP_TECS::_update_pitch(void)
     _last_pitch_dem = _pitch_dem;
 }
 
+void AP_TECS::_calc_takeoff(void) {
+    if(_TAS_state < _takeoff_speed) {
+        _pitch_dem = 0.0f;
+    }
+    else _pitch_dem = constrain_float(_takeoff_pitch, _PITCHminf, _PITCHmaxf);; 
+    
+    _throttle_dem = constrain_float(_takeoff_throttle, _THRminf, _THRmaxf);
+}
+
+// configured to takeoff only once per activation of FBWB
+// Required to re-takeoff: User exits FBWB for >1sec, Speed and height are minimal (preferably stopped)
+void AP_TECS::_calc_takeoff_flag(void) {
+
+    // final speed condition needs to be dialed in. Must define a flying speed, but for now this may mess with tuning the takeoff
+    if(!_flags._takeoff_complete && (_height > _fxheight* constrain_float(_takeoff_window, 1.0f, 2.0f) || _TAS_state > _takeoff_speed * 2.0f)) {
+        _flags._takeoff_complete = true;
+    }
+    
+}
+
+//NOTE: Pitch has units of radians
 void AP_TECS::_update_pitch_pid(void)
 {
     uint32_t tnow = AP_HAL::millis();
@@ -933,9 +982,13 @@ void AP_TECS::_update_pitch_pid(void)
     float output = 0.0;
      
     // feedfoward trim pitch from theoretically derived values
-    const Matrix3f &rotMat = _ahrs.get_rotation_body_to_ned();
-    float cosPhi = sqrtf((rotMat.a.y*rotMat.a.y) + (rotMat.b.y*rotMat.b.y));
-    output += (_pitch_ff_gain/(_TAS_state*_TAS_state)) * ((1.0f/cosPhi) + 1.0f);
+    output += _pitch_ff_gain/(_TAS_state*_TAS_state);
+    
+    if(_pchrll_ff_gain > 0.0f){
+        const Matrix3f &rotMat = _ahrs.get_rotation_body_to_ned();
+        _cPhi = sqrtf((rotMat.a.y*rotMat.a.y) + (rotMat.b.y*rotMat.b.y));
+        output *= _pchrll_ff_gain * ((1.0f/_cPhi) + 1.0f);
+    }
     
     if (_last_t_p == 0 || dt > 1000) {
         dt = 0;
@@ -952,18 +1005,22 @@ void AP_TECS::_update_pitch_pid(void)
     float error = _height-(_fxheight * 0.01f);
     
     // scale PID gains based on velocity
-    if(_gain_scale == 1) {
-        _tkp = _tkp_0/(_TAS_state*_TAS_state);
-        _tkd = _tkd_0/(_TAS_state*_TAS_state);
-        _tki = _tki_0/(_TAS_state*_TAS_state);
+    _pkp = _pkp_0/(_TAS_state*_TAS_state);
+    _pkd = _pkd_0/(_TAS_state*_TAS_state);
+    _pki = _pki_0/(_TAS_state*_TAS_state);
+
+    // add 'break' statements to prevent unnecessary comparisons?
+    if(labs(_ahrs.roll_sensor) > _bank_disable_angle*100 && _bank_disable_angle > 0.0f) {
+        if(_bank_pid_disable >= 1) {
+            _pkp = 0.0f;
+        }
+        if(_bank_pid_disable >= 2) {
+            _pkd = 0.0f;
+        }
+        if(_bank_pid_disable >= 3) {
+            _pki = 0.0f;
+        }
     }
-    else {
-        _tkp = _tkp_0;
-        _tkd = _tkd_0;
-        _tki = _tki_0;
-    }
-   
-    
     // Compute proportional component
     output += (_pkp*error);
 
@@ -998,13 +1055,13 @@ void AP_TECS::_update_pitch_pid(void)
 
     // Compute integral component if time has elapsed
     if ((fabsf(_pki) > 0) && (dt > 0)) {
-        _integrator_pid_p             += (error * _pki) * delta_time;
+        _integrator_pid_p             += error * delta_time;
         if (_integrator_pid_p < -_timax) {
             _integrator_pid_p = -_timax;
         } else if (_integrator_pid_p > _timax) {
             _integrator_pid_p = _timax;
         }
-        output                          += _integrator_pid_p;
+        output                          += _pki * _integrator_pid_p;
     }
     
     _pitch_dem = constrain_float(output, _PITCHminf, _PITCHmaxf);
@@ -1021,7 +1078,7 @@ void AP_TECS::_update_throttle_pid(void)
     float delta_time;
     float output = 0.0;
     
-    output += 10.736f * _TAS_state + 11.375f;
+    output += 0.1074f * _TAS_state + 0.114f;
     
     if (_last_t_t == 0 || dt > 1000) {
         dt = 0;
@@ -1037,7 +1094,7 @@ void AP_TECS::_update_throttle_pid(void)
     delta_time = (float)dt / 1000.0f;
     float error = _TAS_state-_TAS_dem;
     
-    _tkp = _tkp_0;
+    _tkp = _tkp_0; //* _TAS_state;
     _tki = _tki_0;
     _tkd = _tkd_0;
     
@@ -1109,6 +1166,7 @@ void AP_TECS::_initialise_states(int32_t ptchMinCO_cd, float hgt_afe)
         _flags.underspeed        = false;
         _flags.badDescent        = false;
         _flags.reached_speed_takeoff = false;
+        _flags._takeoff_complete = false;
         _DT                = 0.1f; // when first starting TECS, use a
         // small time constant
     }
@@ -1153,7 +1211,7 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
     _DT = (now - _update_pitch_throttle_last_usec) * 1.0e-6f;
     _update_pitch_throttle_last_usec = now;
 
-    _flags.is_doing_auto_land = (flight_stage == AP_Vehicle::FixedWing::FLIGHT_LAND);
+    _flags.is_doing_auto_land = false; //(flight_stage == AP_Vehicle::FixedWing::FLIGHT_LAND); --> disable landing mode for hydrofoil (just kill the throttle)
     _distance_beyond_land_wp = distance_beyond_land_wp;
     _flight_stage = flight_stage;
 
@@ -1195,45 +1253,45 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
         _pitch_max_limit = 90;
     }
         
-    if (_landing.is_flaring()) {
-        // in flare use min pitch from LAND_PITCH_CD
-        _PITCHminf = MAX(_PITCHminf, _landing.get_pitch_cd() * 0.01f);
+//    if (_landing.is_flaring()) {
+//        // in flare use min pitch from LAND_PITCH_CD
+//        _PITCHminf = MAX(_PITCHminf, _landing.get_pitch_cd() * 0.01f);
+//
+//        // and use max pitch from TECS_LAND_PMAX
+//        if (_land_pitch_max != 0) {
+//            _PITCHmaxf = MIN(_PITCHmaxf, _land_pitch_max);
+//        }
+//
+//        // and allow zero throttle
+//        _THRminf = 0;
+//    } else if (_landing.is_on_approach() && (-_climb_rate) > _land_sink) {
+//        // constrain the pitch in landing as we get close to the flare
+//        // point. Use a simple linear limit from 15 meters after the
+//        // landing point
+//        float time_to_flare = (- hgt_afe / _climb_rate) - _landing.get_flare_sec();
+//        if (time_to_flare < 0) {
+//            // we should be flaring already
+//            _PITCHminf = MAX(_PITCHminf, _landing.get_pitch_cd() * 0.01f);
+//        } else if (time_to_flare < timeConstant()*2) {
+//            // smoothly move the min pitch to the flare min pitch over
+//            // twice the time constant
+//            float p = time_to_flare/(2*timeConstant());
+//            float pitch_limit_cd = p*aparm.pitch_limit_min_cd + (1-p)*_landing.get_pitch_cd();
+//#if 0
+//            ::printf("ttf=%.1f hgt_afe=%.1f _PITCHminf=%.1f pitch_limit=%.1f climb=%.1f\n",
+//                     time_to_flare, hgt_afe, _PITCHminf, pitch_limit_cd*0.01f, _climb_rate);
+//#endif
+//            _PITCHminf = MAX(_PITCHminf, pitch_limit_cd*0.01f);
+//        }
+//    }
 
-        // and use max pitch from TECS_LAND_PMAX
-        if (_land_pitch_max != 0) {
-            _PITCHmaxf = MIN(_PITCHmaxf, _land_pitch_max);
-        }
-
-        // and allow zero throttle
-        _THRminf = 0;
-    } else if (_landing.is_on_approach() && (-_climb_rate) > _land_sink) {
-        // constrain the pitch in landing as we get close to the flare
-        // point. Use a simple linear limit from 15 meters after the
-        // landing point
-        float time_to_flare = (- hgt_afe / _climb_rate) - _landing.get_flare_sec();
-        if (time_to_flare < 0) {
-            // we should be flaring already
-            _PITCHminf = MAX(_PITCHminf, _landing.get_pitch_cd() * 0.01f);
-        } else if (time_to_flare < timeConstant()*2) {
-            // smoothly move the min pitch to the flare min pitch over
-            // twice the time constant
-            float p = time_to_flare/(2*timeConstant());
-            float pitch_limit_cd = p*aparm.pitch_limit_min_cd + (1-p)*_landing.get_pitch_cd();
-#if 0
-            ::printf("ttf=%.1f hgt_afe=%.1f _PITCHminf=%.1f pitch_limit=%.1f climb=%.1f\n",
-                     time_to_flare, hgt_afe, _PITCHminf, pitch_limit_cd*0.01f, _climb_rate);
-#endif
-            _PITCHminf = MAX(_PITCHminf, pitch_limit_cd*0.01f);
-        }
-    }
-
-    if (flight_stage == AP_Vehicle::FixedWing::FLIGHT_TAKEOFF || flight_stage == AP_Vehicle::FixedWing::FLIGHT_ABORT_LAND) {
-        if (!_flags.reached_speed_takeoff && _TAS_state >= _TAS_dem_adj) {
-            // we have reached our target speed in takeoff, allow for
-            // normal throttle control
-            _flags.reached_speed_takeoff = true;
-        }
-    }
+//    if (flight_stage == AP_Vehicle::FixedWing::FLIGHT_TAKEOFF || flight_stage == AP_Vehicle::FixedWing::FLIGHT_ABORT_LAND) {
+//        if (!_flags.reached_speed_takeoff && _TAS_state >= _TAS_dem_adj) {
+//            // we have reached our target speed in takeoff, allow for
+//            // normal throttle control
+//            _flags.reached_speed_takeoff = true;
+//        }
+//    }
     
     // convert to radians
     _PITCHmaxf = radians(_PITCHmaxf);
@@ -1241,7 +1299,10 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
 
     // initialise selected states and variables if DT > 1 second or in climbout
     _initialise_states(ptchMinCO_cd, hgt_afe);
-
+    
+    // determine whether takeoff is required
+    _calc_takeoff_flag();
+    
     // Calculate Specific Total Energy Rate Limits
     _update_STE_rate_lim();
 
@@ -1262,23 +1323,27 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
     // Note that caller can demand the use of
     // synthetic airspeed for one loop if needed. This is required
     // during QuadPlane transition when pitch is constrained
-    if (_throttle_pid_enable >= 1.0) {
-        _update_throttle_pid();
-    }
-    else if (((_ahrs.airspeed_sensor_enabled() || _use_synthetic_airspeed) && !_manual_throt_enable) || _use_synthetic_airspeed_once) {
-        _update_throttle_with_airspeed();
-        _use_synthetic_airspeed_once = false;
-    } else {
-        _update_throttle_without_airspeed(throttle_nudge);
-    }
-
-    // Detect bad descent due to demanded airspeed being too high
-//    _detect_bad_descent();
-
-    // Calculate pitch demand
-    if (_pitch_pid_enable >= 1.0) {_update_pitch_pid();}
-    else {_update_pitch();}
-
+     //if(_flags._takeoff_complete) {
+        if (_throttle_pid_enable >= 1.0) {
+            _update_throttle_pid();
+        }
+        else if (((_ahrs.airspeed_sensor_enabled() || _use_synthetic_airspeed) && !_manual_throt_enable) || _use_synthetic_airspeed_once) {
+            _update_throttle_with_airspeed();
+            _use_synthetic_airspeed_once = false;
+        } else {
+            _update_throttle_without_airspeed(throttle_nudge);
+        }
+    
+        // Detect bad descent due to demanded airspeed being too high
+    //    _detect_bad_descent();
+    
+        // Calculate pitch demand
+        if (_pitch_pid_enable >= 1.0) {_update_pitch_pid();}
+        else {_update_pitch();}
+    //}
+//    else {
+//        _calc_takeoff();
+//    }
     // log to DataFlash
     DataFlash_Class::instance()->Log_Write("TECS", "TimeUS,h,dh,hdem,dhdem,spdem,sp,dsp,ith,iph,th,ph,dspdem,w,f", "QfffffffffffffB",
                                            now,
@@ -1296,13 +1361,16 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
                                            (double)_TAS_rate_dem,
                                            (double)logging.SKE_weighting,
                                            _flags_byte);
-    DataFlash_Class::instance()->Log_Write("TEC2", "TimeUS,KErr,PErr,EDelta,LF,integ", "Qfffff",
+    DataFlash_Class::instance()->Log_Write("TEC2", "TimeUS,KErr,PErr,EDelta,LF,integ,cPhi, h_kf, hd_kf", "Qffffffff",
                                            now,
                                            (double)logging.SKE_error,
                                            (double)logging.SPE_error,
                                            (double)logging.SEB_delta,
                                            (double)load_factor,
-                                           (double)_integrator_pid_p);
+                                           (double)_integrator_pid_p,
+                                           (double)_cPhi,
+                                           (double)logging.height_log,
+                                           (double)logging.hd_log);
 }
 
 

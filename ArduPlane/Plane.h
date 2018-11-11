@@ -320,9 +320,10 @@ private:
 
 
 //Global Variable for Hydrofoil Project/////////
-float dist_above_water = 0.0;
-float vel_above_water = 0.0;
-float prev_rng_time =0.0;
+float dist_above_water = 0.0f;
+float vel_above_water = 0.0f;
+float prev_rng_time =0.0f;
+//uint32_t sysID_startT = 0;
 //End of Global Variables///////////////////////
 
 

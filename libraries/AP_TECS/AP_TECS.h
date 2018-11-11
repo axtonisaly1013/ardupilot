@@ -55,8 +55,6 @@ public:
     
     float get_alt_test(void) {return _alt_test;}
     
-    float get_alt_test_2(void) {return _alt_test_2;}
-
 
     // Update the control loop calculations
     void update_pitch_throttle(int32_t hgt_dem_cm,
@@ -102,12 +100,14 @@ public:
     
     // return landing sink rate
     float get_land_sinkrate(void) const {
-        return _land_sink;
+        //return _land_sink;
+        return 0.25f;
     }
 
     // return landing airspeed
     float get_land_airspeed(void) const {
-        return _landAirspeed;
+        //return _landAirspeed;
+        return -1;
     }
 
     // return height rate demand, in m/s
@@ -161,27 +161,27 @@ private:
     AP_Float _minSinkRate;
     AP_Float _maxSinkRate;
     AP_Float _timeConst;
-    AP_Float _landTimeConst;
+    //AP_Float _landTimeConst;
     AP_Float _ptchDamp;
-    AP_Float _land_pitch_damp;
-    AP_Float _landDamp;
+    //AP_Float _land_pitch_damp;
+    //AP_Float _landDamp;
     AP_Float _thrDamp;
-    AP_Float _land_throttle_damp;
+    //AP_Float _land_throttle_damp;
     AP_Float _integGain;
-    AP_Float _integGain_takeoff;
-    AP_Float _integGain_land;
+    //AP_Float _integGain_takeoff;
+    //AP_Float _integGain_land;
     AP_Float _vertAccLim;
     AP_Float _rollComp;
     AP_Float _spdWeight;
-    AP_Float _spdWeightLand;
-    AP_Float _landThrottle;
-    AP_Float _landAirspeed;
-    AP_Float _land_sink;
-    AP_Float _land_sink_rate_change;
+    //AP_Float _spdWeightLand;
+    //AP_Float _landThrottle;
+    //AP_Float _landAirspeed;
+    //AP_Float _land_sink;
+    //AP_Float _land_sink_rate_change;
     AP_Int8  _pitch_max;
     AP_Int8  _pitch_min;
-    AP_Int8  _land_pitch_max;
-    AP_Float _maxSinkRate_approach;
+    //AP_Int8  _land_pitch_max;
+    //AP_Float _maxSinkRate_approach;
     AP_Float _mxheight;
     AP_Float _fxheight;
     AP_Float _pkp_0;
@@ -199,8 +199,14 @@ private:
     AP_Int8 _gain_scale;
     AP_Float _pitch_ff_gain;
     AP_Float _alt_test;
-    AP_Float _alt_test_2;
     AP_Int8 _test;
+    AP_Float _pchrll_ff_gain;
+    AP_Int8 _bank_pid_disable;
+    AP_Float _bank_disable_angle;
+    AP_Float _takeoff_speed;
+    AP_Float _takeoff_pitch;
+    AP_Float _takeoff_window;
+    AP_Float _takeoff_throttle;
 
     // define variable for keeping track of proportional gain (changes every call of _update_pitch_pid)
     float _pkp;
@@ -209,6 +215,8 @@ private:
     float _tkp;
     float _tki;
     float _tkd;
+    
+    float _cPhi = -1.0f;
       
     // temporary _pitch_max_limit. Cleared on each loop. Clear when >= 90
     int8_t _pitch_max_limit = 90;
@@ -313,6 +321,8 @@ private:
 
         // true when we have reached target speed in takeoff
         bool reached_speed_takeoff:1;
+        
+        bool _takeoff_complete:1;
     };
     union {
         struct flags _flags;
@@ -376,6 +386,8 @@ private:
         float SPE_error;
         float SKE_error;
         float SEB_delta;
+        float height_log;
+        float hd_log;
     } logging;
 
     AP_Int8 _use_synthetic_airspeed;
@@ -418,6 +430,10 @@ private:
     
     // Update Demanded Throttle using PID
     void _update_throttle_pid(void);
+    
+    // Methods for determining status of takeoff
+    void _calc_takeoff(void);
+    void _calc_takeoff_flag(void);
 
     // Initialise states and variables
     void _initialise_states(int32_t ptchMinCO_cd, float hgt_afe);

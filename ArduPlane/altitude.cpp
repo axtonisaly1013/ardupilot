@@ -158,7 +158,7 @@ float Plane::relative_ground_altitude(bool use_rangefinder_if_available)
  */
 void Plane::set_target_altitude_current(void)
 {
-    if(SpdHgt_Controller->get_alt_test_2() >= 1.0f)
+    if(SpdHgt_Controller->get_alt_test() >= 2.0f)
         {
             set_target_altitude_preset();
             return;
@@ -192,7 +192,7 @@ void Plane::set_target_altitude_current(void)
  */
 void Plane::set_target_altitude_current_water(void)
 {
-    if(SpdHgt_Controller->get_alt_test_2() >= 1.0f)
+    if(SpdHgt_Controller->get_alt_test() >= 2.0f)
         {
             set_target_altitude_preset();
             return;
@@ -633,7 +633,9 @@ float Plane::rangefinder_correction(void)
  */
 void Plane::rangefinder_height_update(void)
 {
-    float distance = rangefinder.distance_cm_orient(ROTATION_PITCH_270)*0.01f;
+    // coded data into mm for higher resolution rangefinder readings
+    float distance = rangefinder.distance_mm_orient(ROTATION_PITCH_270)*0.001f;
+
     
     if ((rangefinder.status_orient(ROTATION_PITCH_270) == RangeFinder::RangeFinder_Good) && home_is_set != HOME_UNSET) {
         if (!rangefinder_state.have_initial_reading) {

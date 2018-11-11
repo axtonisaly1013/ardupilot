@@ -74,6 +74,7 @@ public:
     struct RangeFinder_State {
         uint8_t                instance;    // the instance number of this RangeFinder
         uint16_t               distance_cm; // distance: in cm
+        uint16_t               distance_mm; // increase resolution of integer stored value
         uint16_t               voltage_mv;  // voltage in millivolts,
                                             // if applicable, otherwise 0
         enum RangeFinder_Status status;     // sensor status
@@ -161,7 +162,11 @@ public:
     uint16_t distance_cm(uint8_t instance) const {
         return (instance<num_instances? _RangeFinder_STATE(instance).distance_cm : 0);
     }
+    uint16_t distance_mm(uint8_t instance) const {
+        return (instance<num_instances? _RangeFinder_STATE(instance).distance_mm : 0);
+    }
     uint16_t distance_cm_orient(enum Rotation orientation) const;
+    uint16_t distance_mm_orient(enum Rotation orientation) const;
 
     uint16_t voltage_mv(uint8_t instance) const {
         return _RangeFinder_STATE(instance).voltage_mv;

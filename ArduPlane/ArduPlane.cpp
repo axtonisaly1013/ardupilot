@@ -202,6 +202,7 @@ void Plane::update_speed_height(void)
 	    // Call TECS 50Hz update. Note that we call this regardless of
 	    // throttle suppressed, as this needs to be running for
 	    // takeoff detection
+        SpdHgt_Controller->update_50hz();
         SpdHgt_Controller->update_50hz(vel_above_water*0.01,dist_above_water*0.01);
     }
 }
@@ -567,8 +568,39 @@ void Plane::handle_auto_mode(void)
         calc_nav_roll();
         calc_nav_pitch();
         calc_throttle();
+        
+        //SYSID Mode can override pitch or roll command in nav mode
+//        if(mast_channel == DOWN) {
+//            calc_output_sysID();
+//        }
+//        else {
+//            sysID_startT = 0;
+//        }
+        
     }
 }
+
+
+// check datatype compatability
+// program TECS parameters
+// possible to input an array of frequencies? HardCode frequencies? 
+//void calc_output_sysID(void) {
+//    float frequency = SpdHgt_Controller->get_frequency();
+//    float amplitude = SpdHgt_Controller->get_amplitude;
+//
+//    if(sysID_startT == 0) {
+//        sysID_startT = AP_HAL::millis();
+//    }
+//    uint32_t timer_ms = AP_HAL::millis() - sysID_startT;
+//
+//    float output = amplitude*sin(2*pi*frequency*timer_ms*0.001f);
+//    if(pitch_test) {
+//        nav_pitch_cd = constrain_int32(output, pitch_limit_min_cd, aparm.pitch_limit_max_cd.get());
+//    }
+//    if(roll_test) {
+//        nav_roll_cd = constrain_int32(output, -roll_limit_cd, roll_limit_cd);
+//    }
+//}
 
 /*
   main flight mode dependent update code 

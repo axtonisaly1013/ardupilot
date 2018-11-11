@@ -32,8 +32,6 @@ public:
 	
 	virtual float get_alt_test(void) = 0;
 
-    virtual float get_alt_test_2(void) = 0;
-
 	// Update of the pitch and throttle demands
 	// Should be called at 10Hz or faster
 	virtual void update_pitch_throttle( int32_t hgt_dem_cm,

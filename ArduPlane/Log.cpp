@@ -378,13 +378,13 @@ void Plane::Log_Write_Sonar()
 {
     uint16_t distance = 0;
     if (rangefinder.status_orient(ROTATION_PITCH_270) == RangeFinder::RangeFinder_Good) {
-        distance = rangefinder.distance_cm_orient(ROTATION_PITCH_270);
+        distance = rangefinder.distance_mm_orient(ROTATION_PITCH_270);
     }
 
     struct log_Sonar pkt = {
         LOG_PACKET_HEADER_INIT(LOG_SONAR_MSG),
         time_us     : AP_HAL::micros64(),
-        distance    : (float)distance*0.01f,
+        distance    : (float)distance*0.001f,
         voltage     : rangefinder.voltage_mv_orient(ROTATION_PITCH_270)*0.001f,
         count       : rangefinder_state.in_range_count,
         correction  : rangefinder_state.correction

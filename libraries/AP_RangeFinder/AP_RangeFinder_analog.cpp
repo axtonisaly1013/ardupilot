@@ -113,7 +113,8 @@ void AP_RangeFinder_analog::update(void)
     }
     // removed a check for negative readings
     
-    state.distance_cm = dist_m * 100.0f;  
+    state.distance_cm = dist_m * 100.0f;
+    state.distance_mm = dist_m * 1000.0f;
 
     // update range_valid state based on distance measured
     update_status();

@@ -68,19 +68,19 @@ void Plane::read_rangefinder(void)
 	switch(compensation_mode) {
 	case 1 :
         for(uint8_t i = 0; i < rangefinder.num_sensors(); i++) {
-            float wtrdistmm = rangefinder.distance_mm(i);
+            float wtrdistm = rangefinder.distance_mm(i) * 0.001f;
             /*
             Working check; if abs error of new measurment is too large, filter it
-            if (abs(wtrdistmm - prev_dist) / prev_dist) > .30 {
-                wtrdistmm = 0.8*prev_dist + 0.2 * wtrdistmm;
+            if (abs(wtrdistm - prev_dist) / prev_dist) > .30 {
+                wtrdistm = 0.8*prev_dist + 0.2 * wtrdistm;
                 }
             */
                 if(rangefinder.flip_measurement(i)) {
                     //Where Low Pass filter Lives. Alpha is the RNGFND_EXPO parameter.
-                    DAW[i] = rangefinder.get_expo(i)*(-1.0*wtrdistmm+rangefinder.get_offb(i)*ahrs.cos_pitch()*ahrs.sin_roll()+rangefinder.get_offc(i)*ahrs.cos_pitch()*ahrs.cos_roll()-rangefinder.get_offa(i)*ahrs.sin_pitch())+(1.0-rangefinder.get_expo(i))*prev_dist;
+                    DAW[i] = rangefinder.get_expo(i)*(-1.0*wtrdistm+rangefinder.get_offb(i)*ahrs.cos_pitch()*ahrs.sin_roll()+rangefinder.get_offc(i)*ahrs.cos_pitch()*ahrs.cos_roll()-rangefinder.get_offa(i)*ahrs.sin_pitch())+(1.0-rangefinder.get_expo(i))*prev_dist;
                 }
                 else{
-                    DAW[i] =  rangefinder.get_expo(i)*((rangefinder.get_offb(i)*ahrs.sin_roll()+(rangefinder.get_offc(i)+wtrdistmm)*ahrs.cos_roll())*ahrs.cos_pitch()-rangefinder.get_offa(i)*ahrs.sin_pitch())+(1.0-rangefinder.get_expo(i))*prev_dist;
+                    DAW[i] =  rangefinder.get_expo(i)*((rangefinder.get_offb(i)*ahrs.sin_roll()+(rangefinder.get_offc(i)+wtrdistm)*ahrs.cos_roll())*ahrs.cos_pitch()-rangefinder.get_offa(i)*ahrs.sin_pitch())+(1.0-rangefinder.get_expo(i))*prev_dist;
                 }
                 // update velocity estimate
                 if(rngdt > 0.0) {
@@ -94,19 +94,19 @@ void Plane::read_rangefinder(void)
         
     case 0 :
         for(uint8_t i = 0; i < rangefinder.num_sensors(); i++) {
-                float wtrdistmm = rangefinder.distance_mm(i);
+                float wtrdistm = rangefinder.distance_mm(i) * 0.001f;
                 /*
                 Working check; if abs error of new measurment is too large, filter it
-                if (abs(wtrdistmm - prev_dist) / prev_dist) > .30 {
-                    wtrdistmm = 0.8*prev_dist + 0.2 * wtrdistmm;
+                if (abs(wtrdistm - prev_dist) / prev_dist) > .30 {
+                    wtrdistm = 0.8*prev_dist + 0.2 * wtrdistm;
                     }
                 */
                     if(rangefinder.flip_measurement(i)) {
                         //Where Low Pass filter Lives. Alpha is the RNGFND_EXPO parameter.
-                        DAW[i] = rangefinder.get_expo(i)*(-1.0*wtrdistmm + rangefinder.get_offb(i))+(1.0-rangefinder.get_expo(i))*prev_dist;
+                        DAW[i] = rangefinder.get_expo(i)*(-1.0*wtrdistm + rangefinder.get_offb(i))+(1.0-rangefinder.get_expo(i))*prev_dist;
                     }
                     else{
-                        DAW[i] =  rangefinder.get_expo(i)*(wtrdistmm + rangefinder.get_offb(i))+(1.0-rangefinder.get_expo(i))*prev_dist;
+                        DAW[i] =  rangefinder.get_expo(i)*(wtrdistm + rangefinder.get_offb(i))+(1.0-rangefinder.get_expo(i))*prev_dist;
                     }
                     // update velocity estimate
                     if(rngdt > 0.0) {

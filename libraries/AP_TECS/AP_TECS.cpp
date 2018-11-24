@@ -368,16 +368,16 @@ const AP_Param::GroupInfo AP_TECS::var_info[] = {
     // @Param: BNKDSB_PID
     // @DisplayName: Disable aspects of PID controller at a set bank angle
     // @Description: Set which terms to disable at angle specified by 'BNKDSB_ANG'
-    // @Values: 0: PID runs, 1: P term disabled, 2: PD diabled, 3: PID disabled
+    // @Values: 0: PID runs, 1: P term disabled, 2: PD disabled, 3: PID disabled
     // @User: Advanced
-    AP_GROUPINFO("BNK_PIDDSB", 12, AP_TECS, _bank_pid_disable, 0),
+    AP_GROUPINFO("BNKDSB_PID", 12, AP_TECS, _bank_pid_disable, 0),
     
     // @Param: BNKDSB_ANG
     // @DisplayName: Disable aspects of PID controller at a set bank angle
     // @Description: Set bank angle at which terms specified by 'BNKDSB_PID' shut off
     // @Values: 0-90 deg; setting to 0 or negative value will disable
     // @User: Advanced
-    AP_GROUPINFO("BNK_PIDDSB", 13, AP_TECS, _bank_disable_angle, 0.0f),
+    AP_GROUPINFO("BNKDSB_ANG", 13, AP_TECS, _bank_disable_angle, 0.0f),
     
     // @Param: TKOFF_SPD
     // @DisplayName: Speed at which takeoff controller pitches up

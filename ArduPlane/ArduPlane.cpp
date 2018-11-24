@@ -203,7 +203,7 @@ void Plane::update_speed_height(void)
 	    // throttle suppressed, as this needs to be running for
 	    // takeoff detection
         SpdHgt_Controller->update_50hz();
-        SpdHgt_Controller->update_50hz(vel_above_water*0.01,dist_above_water*0.01);
+        SpdHgt_Controller->update_50hz(vel_above_water,dist_above_water);
     }
 }
 

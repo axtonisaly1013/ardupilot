@@ -457,6 +457,7 @@ void AP_TECS::update_50hz(void)
         float baro_alt = _height;
         // Get height acceleration
         float hgt_ddot_mea = -(_ahrs.get_accel_ef().z + GRAVITY_MSS);
+        logging.accel_log = _ahrs.get_accel_ef().z;
         // Perform filter calculation using backwards Euler integration
         // Coefficients selected to place all three filter poles at omega
         float omega2 = _hgtCompFiltOmega*_hgtCompFiltOmega;
@@ -481,11 +482,11 @@ void AP_TECS::update_50hz(void)
 
     // Update and average speed rate of change
     // Get DCM
-    const Matrix3f &rotMat = _ahrs.get_rotation_body_to_ned();
-    // Calculate speed rate of change
-    float temp = rotMat.c.x * GRAVITY_MSS + _ahrs.get_ins().get_accel().x;
-    // take 5 point moving average
-    _vel_dot = _vdot_filter.apply(temp);
+//    const Matrix3f &rotMat = _ahrs.get_rotation_body_to_ned();
+//    // Calculate speed rate of change
+//    float temp = rotMat.c.x * GRAVITY_MSS + _ahrs.get_ins().get_accel().x;
+//    // take 5 point moving average
+//    _vel_dot = _vdot_filter.apply(temp);
 
 }
 
@@ -1361,7 +1362,7 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
                                            (double)_TAS_rate_dem,
                                            (double)logging.SKE_weighting,
                                            _flags_byte);
-    DataFlash_Class::instance()->Log_Write("TEC2", "TimeUS,KErr,PErr,EDelta,LF,integ,cPhi, h_kf, hd_kf", "Qffffffff",
+    DataFlash_Class::instance()->Log_Write("TEC2", "TimeUS,KErr,PErr,EDelta,LF,integ,cPhi, h_kf, hd_kf, accZ", "Qfffffffff",
                                            now,
                                            (double)logging.SKE_error,
                                            (double)logging.SPE_error,
@@ -1370,7 +1371,8 @@ void AP_TECS::update_pitch_throttle(int32_t hgt_dem_cm,
                                            (double)_integrator_pid_p,
                                            (double)_cPhi,
                                            (double)logging.height_log,
-                                           (double)logging.hd_log);
+                                           (double)logging.hd_log,
+                                           (double)logging.accel_log);
 }
 
 

@@ -388,6 +388,7 @@ private:
         float SEB_delta;
         float height_log;
         float hd_log;
+        float accel_log;
     } logging;
 
     AP_Int8 _use_synthetic_airspeed;

@@ -22,9 +22,9 @@ float QuadPlane::tilt_max_change(bool up)
         if (plane.control_mode == MANUAL) {
             fast_tilt = true;
         }
-        if (hal.util->get_soft_armed() && !in_vtol_mode() && !assisted_flight) {
-            fast_tilt = true;
-        }
+//        if (hal.util->get_soft_armed() && !in_vtol_mode() && !assisted_flight) {
+//            fast_tilt = true;
+//        }
         if (fast_tilt) {
             // allow a minimum of 90 DPS in manual or if we are not
             // stabilising, to give fast control
@@ -59,33 +59,34 @@ void QuadPlane::tiltrotor_continuous_update(void)
 
     // the maximum rate of throttle change
     float max_change;
-    
-    if (!in_vtol_mode() && (!hal.util->get_soft_armed() || !assisted_flight)) {
-        // we are in pure fixed wing mode. Move the tiltable motors all the way forward and run them as
-        // a forward motor
-        tiltrotor_slew(1);
 
-        max_change = tilt_max_change(false);
-        
-        float new_throttle = constrain_float(SRV_Channels::get_output_scaled(SRV_Channel::k_throttle)*0.01, 0, 1);
-        if (tilt.current_tilt < 1) {
-            tilt.current_throttle = constrain_float(new_throttle,
-                                                    tilt.current_throttle-max_change,
-                                                    tilt.current_throttle+max_change);
-        } else {
-            tilt.current_throttle = new_throttle;
-        }
-        if (!hal.util->get_soft_armed()) {
-            tilt.current_throttle = 0;
-        } else {
-            // the motors are all the way forward, start using them for fwd thrust
-            uint8_t mask = is_zero(tilt.current_throttle)?0:(uint8_t)tilt.tilt_mask.get();
-            motors->output_motor_mask(tilt.current_throttle, mask);
-            // prevent motor shutdown
-            tilt.motors_active = true;
-        }
-        return;
-    }
+    // Urban VTOLS don't tilt
+//    if (!in_vtol_mode() && (!hal.util->get_soft_armed() || !assisted_flight)) {
+//        // we are in pure fixed wing mode. Move the tiltable motors all the way forward and run them as
+//        // a forward motor
+//        tiltrotor_slew(1);
+//
+//        max_change = tilt_max_change(false);
+//
+//        float new_throttle = constrain_float(SRV_Channels::get_output_scaled(SRV_Channel::k_throttle)*0.01, 0, 1);
+//        if (tilt.current_tilt < 1) {
+//            tilt.current_throttle = constrain_float(new_throttle,
+//                                                    tilt.current_throttle-max_change,
+//                                                    tilt.current_throttle+max_change);
+//        } else {
+//            tilt.current_throttle = new_throttle;
+//        }
+//        if (!hal.util->get_soft_armed()) {
+//            tilt.current_throttle = 0;
+//        } else {
+//            // the motors are all the way forward, start using them for fwd thrust
+//            uint8_t mask = is_zero(tilt.current_throttle)?0:(uint8_t)tilt.tilt_mask.get();
+//            motors->output_motor_mask(tilt.current_throttle, mask);
+//            // prevent motor shutdown
+//            tilt.motors_active = true;
+//        }
+//        return;
+//    }
 
     // remember the throttle level we're using for VTOL flight
     float motors_throttle = motors->get_throttle();
@@ -115,8 +116,7 @@ void QuadPlane::tiltrotor_continuous_update(void)
         return;
     }
 
-    if (assisted_flight &&
-        transition_state >= TRANSITION_TIMER) {
+    if (transition_state >= TRANSITION_TIMER) {
         // we are transitioning to fixed wing - tilt the motors all
         // the way forward
         tiltrotor_slew(1);

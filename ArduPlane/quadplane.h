@@ -18,7 +18,7 @@ public:
     friend class AP_Tuning_Plane;
     friend class GCS_MAVLINK_Plane;
     friend class AP_AdvancedFailsafe_Plane;
-    
+
     QuadPlane(AP_AHRS_NavEKF &_ahrs);
 
     // var_info for holding Parameter information
@@ -34,7 +34,7 @@ public:
     void setup_target_position(void);
     void takeoff_controller(void);
     void waypoint_controller(void);
-    
+
     // update transition handling
     void update(void);
 
@@ -48,7 +48,7 @@ public:
 
     // is quadplane assisting?
     bool in_assisted_flight(void) const {
-        return available() && assisted_flight;
+        return available();
     }
 
     /*
@@ -60,7 +60,7 @@ public:
       return true if we are a tailsitter transitioning to VTOL flight
     */
     bool in_tailsitter_vtol_transition(void) const;
-    
+
     bool handle_do_vtol_transition(enum MAV_VTOL_STATE state);
 
     bool do_vtol_takeoff(const AP_Mission::Mission_Command& cmd);
@@ -79,7 +79,7 @@ public:
     }
 
     // return desired forward throttle percentage
-    int8_t forward_throttle_pct(void);        
+    int8_t forward_throttle_pct(void);
     float get_weathervane_yaw_rate_cds(void);
 
     // see if we are flying from vtol point of view
@@ -90,13 +90,13 @@ public:
 
     // return true when flying a tailsitter in VTOL
     bool tailsitter_active(void);
-    
+
     // create outputs for tailsitters
     void tailsitter_output(void);
 
     // handle different tailsitter input types
     void tailsitter_check_input(void);
-    
+
     // check if we have completed transition to fixed wing
     bool tailsitter_transition_fw_complete(void);
 
@@ -105,26 +105,20 @@ public:
 
     // account for surface speed scaling in hover
     void tailsitter_speed_scaling(void);
-    
+
     // user initiated takeoff for guided mode
     bool do_user_takeoff(float takeoff_altitude);
-    
+
     struct PACKED log_QControl_Tuning {
         LOG_PACKET_HEADER;
         uint64_t time_us;
-        float    angle_boost;
         float    throttle_out;
-        float    desired_alt;
-        float    inav_alt;
         int16_t  desired_climb_rate;
         int16_t  climb_rate;
-        float    dvx;
-        float    dvy;
-        float    dax;
-        float    day;
         float    throttle_mix;
+        int8_t   tran_st;
     };
-        
+
 private:
     AP_AHRS_NavEKF &ahrs;
     AP_Vehicle::MultiCopter aparm;
@@ -139,14 +133,14 @@ private:
 
     AP_Int8 frame_class;
     AP_Int8 frame_type;
-    
+
     AP_MotorsMulticopter *motors;
     const struct AP_Param::GroupInfo *motors_var_info;
-    
+
     AC_AttitudeControl_Multi *attitude_control;
     AC_PosControl *pos_control;
     AC_WPNav *wp_nav;
-    
+
     // maximum vertical velocity the pilot may request
     AP_Int16 pilot_velocity_z_max;
 
@@ -154,26 +148,26 @@ private:
     AP_Int16 pilot_accel_z;
 
     // check for quadplane assistance needed
-    bool assistance_needed(float aspeed);
+    bool assistance_needed(void);
 
     // update transition handling
     void update_transition(void);
 
     // check for an EKF yaw reset
     void check_yaw_reset(void);
-    
+
     // hold hover (for transition)
-    void hold_hover(float target_climb_rate);    
+    void hold_hover(float target_climb_rate);
 
     // hold stabilize (for transition)
-    void hold_stabilize(float throttle_in);    
+    void hold_stabilize(float throttle_in);
 
     // get pilot desired yaw rate in cd/s
     float get_pilot_input_yaw_rate_cds(void);
 
     // get overall desired yaw rate in cd/s
     float get_desired_yaw_rate_cds(void);
-    
+
     // get desired climb rate in cm/s
     float get_pilot_desired_climb_rate_cms(void);
 
@@ -182,7 +176,7 @@ private:
 
     // use multicopter rate controller
     void multicopter_attitude_rate_update(float yaw_rate_cds, float smoothing_gain);
-    
+
     // main entry points for VTOL flight modes
     void init_stabilize(void);
     void control_stabilize(void);
@@ -198,7 +192,7 @@ private:
 
     void init_qrtl(void);
     void control_qrtl(void);
-    
+
     float assist_climb_rate_cms(void);
 
     // calculate desired yaw rate for assistance
@@ -208,7 +202,7 @@ private:
     void motors_output(void);
     void Log_Write_QControl_Tuning();
     float landing_descent_rate_cms(float height_above_ground);
-    
+
     // setup correct aux channels for frame class
     void setup_default_channels(uint8_t num_motors);
 
@@ -224,12 +218,12 @@ private:
 
     // calculate a stopping distance for fixed-wing to vtol transitions
     float stopping_distance(void);
-    
+
     AP_Int16 transition_time_ms;
 
     // transition deceleration, m/s/s
     AP_Float transition_decel;
-    
+
     AP_Int16 rc_speed;
 
     // min and max PWM for throttle
@@ -242,7 +236,7 @@ private:
     // angular error at which quad assistance is given
     AP_Int8 assist_angle;
     uint32_t angle_error_start_ms;
-    
+
     // maximum yaw rate in degrees/second
     AP_Float yaw_rate_max;
 
@@ -251,11 +245,11 @@ private:
 
     // QRTL start altitude, meters
     AP_Int16 qrtl_alt;
-    
+
     // alt to switch to QLAND_FINAL
     AP_Float land_final_alt;
     AP_Float vel_forward_alt_cutoff;
-    
+
     AP_Int8 enable;
     AP_Int8 transition_pitch_max;
 
@@ -275,7 +269,7 @@ private:
     // HEARTBEAT mav_type override
     AP_Int8 mav_type;
     uint8_t get_mav_type(void) const;
-    
+
     // time we last got an EKF yaw reset
     uint32_t ekfYawReset_ms;
 
@@ -292,9 +286,9 @@ private:
         uint32_t last_pilot_input_ms;
         float last_output;
     } weathervane;
-    
+
     bool initialised;
-    
+
     // timer start for transition
     uint32_t transition_start_ms;
 
@@ -305,30 +299,24 @@ private:
 
     // pitch when we enter loiter mode
     int32_t loiter_initial_pitch_cd;
-    
+
     const float smoothing_gain = 6;
 
     // true if we have reached the airspeed threshold for transition
     enum {
-        TRANSITION_AIRSPEED_WAIT,
-        TRANSITION_TIMER,
-        TRANSITION_ANGLE_WAIT_FW,
-        TRANSITION_ANGLE_WAIT_VTOL,
-        TRANSITION_DONE
+        TRANSITION_AIRSPEED_WAIT    = 0,
+        TRANSITION_TIMER            = 1,
+        TRANSITION_ANGLE_WAIT_FW    = 2,
+        TRANSITION_ANGLE_WAIT_VTOL  = 3,
+        TRANSITION_DONE             = 4
     } transition_state;
 
     // true when waiting for pilot throttle
     bool throttle_wait:1;
 
-    // true when quad is assisting a fixed wing mode
-    bool assisted_flight:1;
-
-    // true when in angle assist
-    bool in_angle_assist:1;
-
     // are we in a guided takeoff?
     bool guided_takeoff:1;
-    
+
     struct {
         // time when motors reached lower limit
         uint32_t lower_limit_start_ms;
@@ -372,7 +360,7 @@ private:
     enum {TILT_TYPE_CONTINUOUS=0,
           TILT_TYPE_BINARY=1,
           TILT_TYPE_VECTORED_YAW=2};
-    
+
     // tiltrotor control variables
     struct {
         AP_Int16 tilt_mask;
@@ -397,7 +385,7 @@ private:
         TAILSITTER_MASK_THROTTLE = 4,
         TAILSITTER_MASK_RUDDER   = 8,
     };
-    
+
     // tailsitter control variables
     struct {
         AP_Int8 transition_angle;
@@ -421,7 +409,7 @@ private:
 
     // time when we were last in a vtol control mode
     uint32_t last_vtol_mode_ms;
-    
+
     void tiltrotor_slew(float tilt);
     void tiltrotor_binary_slew(bool forward);
     void tiltrotor_update(void);
@@ -442,7 +430,7 @@ private:
 
     // set altitude target to current altitude
     void set_alt_target_current(void);
-    
+
     // adjust altitude target smoothly
     void adjust_alt_target(float target_cm);
 
@@ -463,7 +451,7 @@ private:
       return true if current mission item is a vtol landing
      */
     bool is_vtol_land(uint16_t id) const;
-    
+
 public:
     void motor_test_output();
     uint8_t mavlink_motor_test_start(mavlink_channel_t chan, uint8_t motor_seq, uint8_t throttle_type,

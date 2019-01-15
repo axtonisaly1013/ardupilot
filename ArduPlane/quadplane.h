@@ -212,6 +212,9 @@ private:
     // setup correct aux channels for frame class
     void setup_default_channels(uint8_t num_motors);
 
+    //setup thrusters 
+    void thrusterSetup(void);
+
     void guided_start(void);
     void guided_update(void);
 

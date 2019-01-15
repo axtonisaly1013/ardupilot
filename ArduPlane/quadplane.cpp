@@ -474,7 +474,16 @@ void QuadPlane::setup_default_channels(uint8_t num_motors)
         SRV_Channels::set_aux_channel_default((SRV_Channel::Aux_servo_function_t)(SRV_Channel::k_motor1+i), CH_5+i);
     }
 }
-    
+ 
+// setup default motors for left and right thrusters
+void thrusterSetup(void)
+{
+    SRV_Channels::set_default_function(CH_3, SRV_Channel::k_leftThruster);
+    SRV_Channels::set_default_function(CH_4, SRV_Channel::k_rightThruster);
+    // if this doesnt work we want to utilize, set aux channel for auxilirary functions
+    // set_aux_channel_default(SRV_Channel::Aux_servo_function_t function, uint8_t channel)
+}
+
 
 bool QuadPlane::setup(void)
 {
@@ -532,22 +541,27 @@ bool QuadPlane::setup(void)
     switch (motor_class) {
     case AP_Motors::MOTOR_FRAME_QUAD:
         setup_default_channels(4);
+        thrusterSetup(); //thustersetup
         break;
     case AP_Motors::MOTOR_FRAME_HEXA:
         setup_default_channels(6);
+        thrusterSetup(); //thustersetup
         break;
     case AP_Motors::MOTOR_FRAME_OCTA:
     case AP_Motors::MOTOR_FRAME_OCTAQUAD:
         setup_default_channels(8);
+        thrusterSetup(); //thustersetup
         break;
     case AP_Motors::MOTOR_FRAME_Y6:
         setup_default_channels(7);
+        thrusterSetup(); //thustersetup
         break;
     case AP_Motors::MOTOR_FRAME_TRI:
         SRV_Channels::set_default_function(CH_5, SRV_Channel::k_motor1);
         SRV_Channels::set_default_function(CH_6, SRV_Channel::k_motor2);
         SRV_Channels::set_default_function(CH_8, SRV_Channel::k_motor4);
         SRV_Channels::set_default_function(CH_11, SRV_Channel::k_motor7);
+        thrusterSetup(); //thustersetup
         AP_Param::set_frame_type_flags(AP_PARAM_FRAME_TRICOPTER);
         break;
     case AP_Motors::MOTOR_FRAME_TAILSITTER:

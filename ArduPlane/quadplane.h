@@ -313,6 +313,15 @@ private:
         TRANSITION_DONE             = 4
     } transition_state;
 
+
+
+    // URBAN VTOL PARAMS
+    AP_Int8 lateral_thruster_enable;
+
+    // ENDPARAMS
+
+
+
     // true when waiting for pilot throttle
     bool throttle_wait:1;
 

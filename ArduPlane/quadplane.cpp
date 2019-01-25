@@ -423,15 +423,6 @@ const AP_Param::GroupInfo QuadPlane::var_info2[] = {
     // @User: Standard
     AP_GROUPINFO("TRANS_DECEL", 1, QuadPlane, transition_decel, 2.0),
 
-    // @Param: LATTHR_ENB
-    // @DisplayName: Activate Lateral Thrusters
-    // @Description: Functionality--> 1. Does nothing in QSTABILIZE mode; 2. Roll commands will be passed thru to side thrusters in QHOVER mode; 3. TODO: Implement in Loiter for automatic position control
-    // @Units: ...
-    // @Increment: ...
-    // @Range: 0 or 1
-    // @User: Advanced
-    AP_GROUPINFO("LATTHR_ENB", 2, QuadPlane, lateral_thruster_enable, 0),
-
     AP_GROUPEND
 };
 
@@ -485,10 +476,10 @@ void QuadPlane::setup_default_channels(uint8_t num_motors)
 }
 
 // setup thruster motor channels
-void QuadPlane::setup_thrusters(void)
+void setup_thrusters(void)
 {
-    SRV_Channels::set_aux_channel_default((SRV_Channel::Aux_servo_function_t)(SRV_Channel::k_leftThruster),  CH_3);
-    SRV_Channels::set_aux_channel_default((SRV_Channel::Aux_servo_function_t)(SRV_Channel::k_rightThruster), CH_4);
+    SRV_Channels::set_default_function(CH_3, SRV_Channel::k_leftThruster);
+    SRV_Channels::set_default_function(CH_4, SRV_Channel::k_rightThruster);
 }
 
 
@@ -745,31 +736,10 @@ void QuadPlane::multicopter_attitude_rate_update(float yaw_rate_cds, float smoot
 {
     if (in_vtol_mode() || is_tailsitter()) {
         // use euler angle attitude control
-        if (lateral_thruster_enable && plane.control_mode == QHOVER) {
-
-            plane.nav_roll_cd = 0;
-            // lateral thruster deadzone between 0-1, add to MP later
-            float lat_deadzone = 0.05;
-
-            // map roll commands to side thrusters
-            // positive roll pushes right
-            if(plane.channel_roll->norm_input() > lat_deadzone) {
-                SRV_Channels::set_output_pwm((SRV_Channel::Aux_servo_function_t)(SRV_Channel::k_rightThruster), (uint16_t)((thr_max_pwm- thr_min_pwm)* plane.channel_roll->norm_input() + thr_min_pwm));
-            } else if(plane.channel_roll->norm_input() < -lat_deadzone) {
-                SRV_Channels::set_output_pwm((SRV_Channel::Aux_servo_function_t)(SRV_Channel::k_leftThruster), (uint16_t)((thr_max_pwm- thr_min_pwm)* -plane.channel_roll->norm_input() + thr_min_pwm));
-            }
-            else {
-                // zero pwm output
-                SRV_Channels::set_output_pwm((SRV_Channel::Aux_servo_function_t)(SRV_Channel::k_rightThruster), 0);
-                SRV_Channels::set_output_pwm((SRV_Channel::Aux_servo_function_t)(SRV_Channel::k_leftThruster),  0);
-            }
-
-        }
         attitude_control->input_euler_angle_roll_pitch_euler_rate_yaw(plane.nav_roll_cd,
                                                                       plane.nav_pitch_cd,
                                                                       yaw_rate_cds,
                                                                       smooth_gain);
-
     } else {
         // use the fixed wing desired rates
         float roll_rate = plane.rollController.get_pid_info().desired;

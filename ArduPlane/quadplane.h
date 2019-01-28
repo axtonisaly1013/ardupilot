@@ -230,12 +230,12 @@ private:
     AP_Int16 thr_min_pwm;
     AP_Int16 thr_max_pwm;
 
-    // speed below which quad assistance is given
-    AP_Float assist_speed;
-
-    // angular error at which quad assistance is given
-    AP_Int8 assist_angle;
-    uint32_t angle_error_start_ms;
+//    // speed below which quad assistance is given
+//    AP_Float assist_speed;
+//
+//    // angular error at which quad assistance is given
+//    AP_Int8 assist_angle;
+//    uint32_t angle_error_start_ms;
 
     // maximum yaw rate in degrees/second
     AP_Float yaw_rate_max;
@@ -305,10 +305,8 @@ private:
     // true if we have reached the airspeed threshold for transition
     enum {
         TRANSITION_AIRSPEED_WAIT    = 0,
-        TRANSITION_TIMER            = 1,
-        TRANSITION_ANGLE_WAIT_FW    = 2,
-        TRANSITION_ANGLE_WAIT_VTOL  = 3,
-        TRANSITION_DONE             = 4
+        TRANSITION_FLYING           = 1, // placeholder state for now
+        TRANSITION_DONE             = 2
     } transition_state;
 
     // true when waiting for pilot throttle

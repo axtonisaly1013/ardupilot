@@ -23,7 +23,7 @@
  */
 bool QuadPlane::is_tailsitter(void) const
 {
-    return available() && frame_class == AP_Motors::MOTOR_FRAME_TAILSITTER;
+    return false;
 }
 
 /*
@@ -38,9 +38,10 @@ bool QuadPlane::tailsitter_active(void)
         return true;
     }
     // check if we are in ANGLE_WAIT fixed wing transition
-    if (transition_state == TRANSITION_ANGLE_WAIT_FW) {
-        return true;
-    }
+    //DON"T FLY THIS SOFTWARE WITH A TAILSITTER
+//    if (transition_state == TRANSITION_ANGLE_WAIT_FW) {
+//        return true;
+//    }
     return false;
 }
 
@@ -199,7 +200,7 @@ void QuadPlane::tailsitter_check_input(void)
  */
 bool QuadPlane::in_tailsitter_vtol_transition(void) const
 {
-    return is_tailsitter() && in_vtol_mode() && transition_state == TRANSITION_ANGLE_WAIT_VTOL;
+    return is_tailsitter() && in_vtol_mode();
 }
 
 /*

@@ -161,14 +161,14 @@ const AP_Param::GroupInfo QuadPlane::var_info[] = {
     // @User: Standard
     AP_GROUPINFO("THR_MAX_PWM", 23, QuadPlane, thr_max_pwm, 2000),
 
-    // @Param: ASSIST_SPEED
-    // @DisplayName: Quadplane assistance speed
-    // @Description: This is the speed below which the quad motors will provide stability and lift assistance in fixed wing modes. Zero means no assistance except during transition
-    // @Units: m/s
-    // @Range: 0 100
-    // @Increment: 0.1
-    // @User: Standard
-    AP_GROUPINFO("ASSIST_SPEED", 24, QuadPlane, assist_speed, 0),
+//    // @Param: ASSIST_SPEED
+//    // @DisplayName: Quadplane assistance speed
+//    // @Description: This is the speed below which the quad motors will provide stability and lift assistance in fixed wing modes. Zero means no assistance except during transition
+//    // @Units: m/s
+//    // @Range: 0 100
+//    // @Increment: 0.1
+//    // @User: Standard
+//    AP_GROUPINFO("ASSIST_SPEED", 24, QuadPlane, assist_speed, 0),
 
     // @Param: YAW_RATE_MAX
     // @DisplayName: Maximum yaw rate
@@ -319,14 +319,14 @@ const AP_Param::GroupInfo QuadPlane::var_info[] = {
     // @User: Standard
     AP_GROUPINFO("LAND_ICE_CUT", 44, QuadPlane, land_icengine_cut,  1),
 
-    // @Param: ASSIST_ANGLE
-    // @DisplayName: Quadplane assistance angle
-    // @Description: This is the angular error in attitude beyond which the quadplane VTOL motors will provide stability assistance. This will only be used if Q_ASSIST_SPEED is also non-zero. Assistance will be given if the attitude is outside the normal attitude limits by at least 5 degrees and the angular error in roll or pitch is greater than this angle for at least 1 second. Set to zero to disable angle assistance.
-    // @Units: deg
-    // @Range: 0 90
-    // @Increment: 1
-    // @User: Standard
-    AP_GROUPINFO("ASSIST_ANGLE", 45, QuadPlane, assist_angle, 30),
+//    // @Param: ASSIST_ANGLE
+//    // @DisplayName: Quadplane assistance angle
+//    // @Description: This is the angular error in attitude beyond which the quadplane VTOL motors will provide stability assistance. This will only be used if Q_ASSIST_SPEED is also non-zero. Assistance will be given if the attitude is outside the normal attitude limits by at least 5 degrees and the angular error in roll or pitch is greater than this angle for at least 1 second. Set to zero to disable angle assistance.
+//    // @Units: deg
+//    // @Range: 0 90
+//    // @Increment: 1
+//    // @User: Standard
+//    AP_GROUPINFO("ASSIST_ANGLE", 45, QuadPlane, assist_angle, 30),
 
     // @Param: TILT_TYPE
     // @DisplayName: Tiltrotor type
@@ -1198,23 +1198,7 @@ void QuadPlane::update_transition(void)
         return;
     }
 
-    // tailsitters use angle wait, not airspeed wait
-    if (is_tailsitter() && transition_state == TRANSITION_AIRSPEED_WAIT) {
-        transition_state = TRANSITION_ANGLE_WAIT_FW;
-    }
-
-    if (is_tailsitter()) {
-        if (transition_state == TRANSITION_ANGLE_WAIT_FW &&
-            tailsitter_transition_fw_complete()) {
-            gcs().send_text(MAV_SEVERITY_INFO, "Transition FW done");
-            transition_state = TRANSITION_DONE;
-        }
-    }
-    // if rotors are fully forward then we are not transitioning
-    if (tiltrotor_fully_fwd()) {
-        transition_state = TRANSITION_DONE;
-    }
-    if (transition_state < TRANSITION_TIMER) {
+    if (transition_state < TRANSITION_FLYING) {
         // set a single loop pitch limit in TECS
         if (plane.ahrs.groundspeed() < 3) {
             // until we have some ground speed limit to zero pitch
@@ -1255,59 +1239,32 @@ void QuadPlane::update_transition(void)
         attitude_control->set_throttle_mix_max();
         break;
     }
-
-    case TRANSITION_TIMER: {
+    // this is a placeholder state for now, should never be reached
+    case TRANSITION_FLYING: {
         motors->set_desired_spool_state(AP_Motors::DESIRED_THROTTLE_UNLIMITED);
-        // after airspeed is reached we degrade throttle over the
-        // transition time, but continue to stabilize
-        if (millis() - transition_start_ms > (unsigned)transition_time_ms) {
-            transition_state = TRANSITION_DONE;
-            gcs().send_text(MAV_SEVERITY_INFO, "Transition done");
-        }
-        float trans_time_ms = (float)transition_time_ms.get();
-        float transition_scale = (trans_time_ms - (millis() - transition_start_ms)) / trans_time_ms;
-        float throttle_scaled = last_throttle * transition_scale;
-
-        // set zero throttle mix, to give full authority to
-        // throttle. This ensures that the fixed wing controllers get
-        // a chance to learn the right integrators during the transition
-        attitude_control->set_throttle_mix_value(0.5*transition_scale);
-
-        if (throttle_scaled < 0.01) {
-            // ensure we don't drop all the way to zero or the motors
-            // will stop stabilizing
-            throttle_scaled = 0.01;
+        // we hold in hover until the required airspeed is reached
+        if (transition_start_ms == 0) {
+            gcs().send_text(MAV_SEVERITY_INFO, "Entered undefined state");
+            transition_start_ms = millis();
         }
 
-        hold_stabilize(throttle_scaled);
+        hold_hover(assist_climb_rate_cms());
         run_rate_controller();
         motors_output();
+        last_throttle = motors->get_throttle();
+
+        // reset integrators while we are below target airspeed as we
+        // may build up too much while still primarily under
+        // multicopter control
+        plane.pitchController.reset_I();
+        plane.rollController.reset_I();
+
+        // give full authority to attitude control
+        attitude_control->set_throttle_mix_max();
+        // revert to proper state
+        transition_state = TRANSITION_AIRSPEED_WAIT;
         break;
     }
-
-    case TRANSITION_ANGLE_WAIT_FW: {
-        motors->set_desired_spool_state(AP_Motors::DESIRED_THROTTLE_UNLIMITED);
-
-        // calculate transition rate in degrees per
-        // millisecond. Assume we want to get to the transition angle
-        // in half the transition time
-        float transition_rate = tailsitter.transition_angle / float(transition_time_ms/2);
-        uint32_t dt = AP_HAL::millis() - transition_start_ms;
-        plane.nav_pitch_cd = constrain_float((-transition_rate * dt)*100, -8500, 0);
-        plane.nav_roll_cd = 0;
-        attitude_control->input_euler_angle_roll_pitch_euler_rate_yaw(plane.nav_roll_cd,
-                                                                      plane.nav_pitch_cd,
-                                                                      0,
-                                                                      smoothing_gain);
-        attitude_control->set_throttle_out(motors->get_throttle_hover(), true, 0);
-        run_rate_controller();
-        motors_output();
-        break;
-    }
-
-    case TRANSITION_ANGLE_WAIT_VTOL:
-        // nothing to do, this is handled in the fw attitude controller
-        break;
 
     case TRANSITION_DONE:
         if (!tilt.motors_active && !is_tailsitter()) {
@@ -1391,7 +1348,7 @@ void QuadPlane::update(void)
         throttle_wait = false;
     }
 
-    tiltrotor_update();
+    //tiltrotor_update();
 }
 
 /*
@@ -2087,7 +2044,7 @@ bool QuadPlane::verify_vtol_takeoff(const AP_Mission::Mission_Command &cmd)
     if (plane.current_loc.alt < plane.next_WP_loc.alt) {
         return false;
     }
-    transition_state = is_tailsitter() ? TRANSITION_ANGLE_WAIT_FW : TRANSITION_AIRSPEED_WAIT;
+    transition_state = TRANSITION_AIRSPEED_WAIT;
     plane.TECS_controller.set_pitch_max_limit(transition_pitch_max);
     set_alt_target_current();
 
@@ -2466,7 +2423,7 @@ bool QuadPlane::in_transition(void) const
 {
     return available() &&
         (transition_state == TRANSITION_AIRSPEED_WAIT ||
-         transition_state == TRANSITION_TIMER);
+         transition_state == TRANSITION_FLYING);
 }
 
 /*

@@ -1432,11 +1432,13 @@ void QuadPlane::motors_output(void)
 
     motors->output();
     if (motors->armed()) {
-        plane.DataFlash.Log_Write_Rate(plane.ahrs, *motors, *attitude_control, *pos_control);
-        Log_Write_QControl_Tuning();
+        // crude way to write data at ~100Hz
         uint32_t now = AP_HAL::millis();
-        if (now - last_ctrl_log_ms > 100) {
+        if (now - last_ctrl_log_ms > 10) {
             attitude_control->control_monitor_log();
+            plane.DataFlash.Log_Write_Rate(plane.ahrs, *motors, *attitude_control, *pos_control);
+            Log_Write_QControl_Tuning();
+            last_ctrl_log_ms = AP_HAL::millis();
         }
     }
 
@@ -2146,6 +2148,11 @@ void QuadPlane::Log_Write_QControl_Tuning()
         tran_st             : transition_state,
     };
     plane.DataFlash.WriteBlock(&pkt, sizeof(pkt));
+
+    if(plane.control_mode == QLOITER) {
+        // write multicopter position control message
+        pos_control->write_log();
+    }
 }
 
 
